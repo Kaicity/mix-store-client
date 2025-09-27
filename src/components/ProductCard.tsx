@@ -1,10 +1,11 @@
 "use client";
 
 import { Product } from "@/types/product";
+import { cn } from "@/utils/tw-merge";
 import { ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import React from "react";
+import React, { useState } from "react";
 
 interface ProductCardProps {
   product: Product;
@@ -13,7 +14,23 @@ interface ProductCardProps {
 const ProductCard = (props: ProductCardProps) => {
   const { product } = props;
 
-  const handleProductType = () => {};
+  const [productSizeColor, setProductSizeColor] = useState({
+    size: product.sizes[0],
+    color: product.colors[0],
+  });
+
+  const handleProductChangeSizeColor = ({
+    type,
+    value,
+  }: {
+    type: "size" | "color";
+    value: string;
+  }) => {
+    setProductSizeColor((prev) => ({
+      ...prev,
+      [type]: value,
+    }));
+  };
 
   const handleAddToCart = () => {};
 
@@ -22,7 +39,7 @@ const ProductCard = (props: ProductCardProps) => {
       <Link href={`/products/${product.id}`}>
         <div className="relative aspect-[2/3]">
           <Image
-            src={product.images[product.colors[0]]}
+            src={product.images[productSizeColor.color]}
             alt={product.name}
             fill
             className="object-cover hover:scale-105 transition-all duration-300"
@@ -44,7 +61,12 @@ const ProductCard = (props: ProductCardProps) => {
               name="size"
               id="size"
               className="ring ring-gray-300 rounded-md px-2 py-1"
-              onChange={(e) => handleProductType()}
+              onChange={(e) =>
+                handleProductChangeSizeColor({
+                  type: "size",
+                  value: e.target.value,
+                })
+              }
             >
               {product.sizes.map((size) => (
                 <option key={size} value={size}>
@@ -59,9 +81,19 @@ const ProductCard = (props: ProductCardProps) => {
             <div className="flex items-center gap-2">
               {product.colors.map((color) => (
                 <div
-                  className={`cursor-pointer border-1 border-gray-500 rounded-full p-[2px]`}
+                  className={cn(
+                    "cursor-pointer border-1 rounded-full p-[1.2]",
+                    productSizeColor.color === color
+                      ? "border-gray-400"
+                      : "border-gray-200"
+                  )}
                   key={color}
-                  onClick={() => handleProductType()}
+                  onClick={(e) =>
+                    handleProductChangeSizeColor({
+                      type: "color",
+                      value: color,
+                    })
+                  }
                 >
                   <div
                     className="w-[14px] h-[14px] rounded-full"
