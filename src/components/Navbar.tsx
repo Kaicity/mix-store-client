@@ -12,19 +12,29 @@ import {
   User,
   X,
 } from "lucide-react";
-import { Sheet, SheetContent, SheetHeader, SheetTrigger } from "./ui/Sheet";
+import {
+  Sheet,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "./ui/Sheet";
 
 const Navbar = () => {
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-gray-200 bg-gray-900">
       <div className="px-2 py-4 md:px-0 mx-auto flex items-center justify-between sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
         {/* MOBILE MENU */}
-        <div className="lg:hidden">
+        <div className="px-2 lg:hidden">
           <Sheet>
             <SheetTrigger>
               <Menu className="w-6 h-6 text-white" />
             </SheetTrigger>
-            <SheetContent side="right" className="bg-gray-900">
+            <SheetContent
+              side="top"
+              className="bg-gray-900 text-gray-200 h-full"
+            >
+              <SheetTitle></SheetTitle>
               <SheetHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2 text-white">
@@ -39,9 +49,6 @@ const Navbar = () => {
                       Mix-Store
                     </p>
                   </div>
-                  <button className="p-2">
-                    <X className="w-4 h-4 text-white" />
-                  </button>
                 </div>
               </SheetHeader>
             </SheetContent>

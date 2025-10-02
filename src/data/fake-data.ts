@@ -3,7 +3,7 @@ import { Products } from "@/types/product";
 const productsData: Products = [
   {
     id: 1,
-    name: "Adidas CoreFit T-Shirt",
+    name: "CoreFit T-Shirt",
     shortDescription:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
     description:
@@ -19,7 +19,7 @@ const productsData: Products = [
   },
   {
     id: 2,
-    name: "Puma Ultra Warm Zip",
+    name: "Puma Ultra Warm",
     shortDescription:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
     description:
@@ -47,7 +47,7 @@ const productsData: Products = [
   },
   {
     id: 4,
-    name: "Nike Dri Flex T-Shirt",
+    name: "Nike Flex T-Shirt",
     shortDescription:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
     description:
@@ -87,7 +87,7 @@ const productsData: Products = [
   },
   {
     id: 7,
-    name: "Nike Ultraboost Pulse ",
+    name: "Nike Ultraboost ",
     shortDescription:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
     description:

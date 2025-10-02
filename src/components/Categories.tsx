@@ -17,13 +17,13 @@ import React from "react";
 
 export const categories = [
   {
-    name: "Tất cả",
+    name: "TẤT CẢ",
     icon: <ShoppingBasket className="w-4 h-4" />,
     slug: "all",
     sub: [],
   },
   {
-    name: "Áo thun",
+    name: "ÁO THUN",
     icon: <Shirt className="w-4 h-4" />,
     slug: "t-shirt",
     sub: [
@@ -33,7 +33,7 @@ export const categories = [
     ],
   },
   {
-    name: "Giày dép",
+    name: "GIÀY DÉP",
     icon: <Footprints className="w-4 h-4" />,
     slug: "shoes",
     sub: [
@@ -43,7 +43,7 @@ export const categories = [
     ],
   },
   {
-    name: "Túi sách",
+    name: "TUI SÁCH",
     icon: <Briefcase className="w-4 h-4" />,
     slug: "bag",
     sub: [
@@ -53,7 +53,7 @@ export const categories = [
     ],
   },
   {
-    name: "Bao tay",
+    name: "BAO TAY",
     icon: <Hand className="w-4 h-4" />,
     slug: "hand",
     sub: [
@@ -63,7 +63,7 @@ export const categories = [
     ],
   },
   {
-    name: "Váy",
+    name: "VÁY",
     icon: <Venus className="w-4 h-4" />,
     slug: "dresses",
     sub: [
@@ -73,7 +73,7 @@ export const categories = [
     ],
   },
   {
-    name: "Hộp quà",
+    name: "HỘP QUÀ",
     icon: <ShoppingBag className="w-4 h-4" />,
     slug: "gift-decor",
     sub: [
@@ -83,7 +83,7 @@ export const categories = [
     ],
   },
   {
-    name: "Phụ kiện",
+    name: "PHỤ KIỆN",
     icon: <Glasses className="w-4 h-4" />,
     slug: "accessories",
     sub: [
@@ -138,7 +138,7 @@ const Categories = () => {
                 {category.sub.map((subItem) => (
                   <button
                     key={subItem.slug}
-                    className="px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 text-left"
+                    className="px-4 py-2 text-sm hover:text-yellow-500 hover:font-medium text-left"
                   >
                     {subItem.name}
                   </button>

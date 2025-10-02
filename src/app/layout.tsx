@@ -4,6 +4,8 @@ import "./globals.css";
 import Navbar from "@/components/Navbar";
 import Footer from "@/components/Footer";
 import Categories from "@/components/Categories";
+import ActionItem from "@/components/ActionItem";
+import { Dialog } from "@radix-ui/react-dialog";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,10 +34,11 @@ export default function RootLayout({
       >
         <Navbar />
         <Categories />
-        <div className="mx-auto sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
+        <div className="px-3 py-2 sm:px-0 sm:py-0 mx-auto sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
           {children}
         </div>
         <Footer />
+        <ActionItem />
       </body>
     </html>
   );

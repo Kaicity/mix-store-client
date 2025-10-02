@@ -7,3 +7,14 @@
   -ms-overflow-style: none; /* IE, Edge */
   scrollbar-width: none; /* Firefox */
 }
+
+/* Container pagination */
+.swiper-pagination {
+  @apply !relative mt-6 flex justify-center;
+}
+
+:root {
+  --swiper-theme-color: #ff6b00;
+  --swiper-navigation-color: #111111;
+  --swiper-pagination-color: #111111;
+}
