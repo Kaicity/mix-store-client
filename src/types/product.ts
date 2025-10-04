@@ -9,4 +9,12 @@ export type Product = {
   images: Record<string, string>;
 };
 
+export type Cart = Product & {
+  quantity: number;
+  selectedSize: string;
+  selectedColor: string;
+};
+
 export type Products = Product[];
+
+export type Carts = Cart[];

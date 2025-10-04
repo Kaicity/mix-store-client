@@ -83,9 +83,12 @@ const Navbar = () => {
             <Store className="w-5 h-5" />
           </Link>
 
-          <button className="flex flex-col items-center">
+          <Link href={"/cart"} className="relative">
             <ShoppingCart className="w-5 h-5" />
-          </button>
+            <span className="absolute -top-3 -right-3 bg-amber-400 text-gray-600 rounded-full w-4 h-4 flex items-center justify-center font-medium text-xs">
+              0
+            </span>
+          </Link>
 
           <Link className="flex flex-col items-center" href="/login">
             <User className="w-5 h-5" />

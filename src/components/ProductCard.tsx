@@ -31,8 +31,13 @@ const ProductCard = (props: ProductCardProps) => {
           {product.shortDescription}
         </p>
 
-        <div className="flex items-center justify-between">
-          <p className="font-semibold text-sm">${product.price.toFixed(2)}</p>
+        <div className="flex items-center justify-between mt-3">
+          <div className="flex items-center gap-2">
+            <p className="font-semibold text-md text-red-600">
+              ${product.price.toFixed(2)}
+            </p>
+            <p className="text-md text-gray-500 line-through">200.000đ</p>
+          </div>
           <CartDialog product={product} />
         </div>
       </div>

@@ -9,7 +9,7 @@ const productsData: Products = [
     description:
       "Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit. Lorem ipsum dolor sit amet consect adipisicing elit lorem ipsum dolor sit.",
     price: 39.9,
-    sizes: ["s", "m", "l", "xl", "xxl"],
+    sizes: ["s", "m", "l", "xl", "xxl", "2xl"],
     colors: ["gray", "purple", "green"],
     images: {
       gray: "/products/1g.png",

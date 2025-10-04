@@ -107,7 +107,10 @@ const Homepage = () => {
             <div className="flex items-center justify-between mb-4">
               <Tittle text="ÁO THUN NAM" />
               <div className="flex justify-center">
-                <Link href="/" className="text-gray-500 hover:text-black">
+                <Link
+                  href="/"
+                  className="text-gray-500 text-sm hover:text-black"
+                >
                   Xem tất cả
                 </Link>
               </div>
@@ -128,7 +131,10 @@ const Homepage = () => {
             <div className="flex items-center justify-between mb-4">
               <Tittle text="ÁO THUN NAM" />
               <div className="flex justify-center">
-                <Link href="/" className="text-gray-500 hover:text-black">
+                <Link
+                  href="/"
+                  className="text-gray-500 text-sm hover:text-black"
+                >
                   Xem tất cả
                 </Link>
               </div>
@@ -149,7 +155,10 @@ const Homepage = () => {
             <div className="flex items-center justify-between mb-4">
               <Tittle text="ÁO THUN NAM" />
               <div className="flex justify-center">
-                <Link href="/" className="text-gray-500 hover:text-black">
+                <Link
+                  href="/"
+                  className="text-gray-500 text-sm hover:text-black"
+                >
                   Xem tất cả
                 </Link>
               </div>
@@ -170,7 +179,10 @@ const Homepage = () => {
             <div className="flex items-center justify-between mb-4">
               <Tittle text="ÁO THUN NAM" />
               <div className="flex justify-center">
-                <Link href="/" className="text-gray-500 hover:text-black">
+                <Link
+                  href="/"
+                  className="text-gray-500 text-sm hover:text-black"
+                >
                   Xem tất cả
                 </Link>
               </div>

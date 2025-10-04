@@ -2,7 +2,7 @@
 
 import type { Product } from "@/types/product";
 import { cn } from "@/utils/tw-merge";
-import { ShoppingBasket, ShoppingCart } from "lucide-react";
+import { ChevronsRightIcon, ShoppingBasket, ShoppingCart } from "lucide-react";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
 import "swiper/css";
@@ -11,6 +11,8 @@ import { Navigation } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
 import type { Swiper as SwiperType } from "swiper";
+import QuantityInput from "./QuantityInput";
+import Link from "next/link";
 
 interface CartProps {
   product: Product;
@@ -53,7 +55,7 @@ const CartDialog = (props: CartProps) => {
       <DialogTrigger className="ring-1 ring-gray-200 shadow-lg rounded-md px-2 py-1 text-sm cursor-pointer hover:text-white hover:bg-black transition-all duration-300 flex items-center gap-2">
         <ShoppingBasket className="w-4 h-4" />
       </DialogTrigger>
-      <DialogContent className="bg-white lg:max-w-[640px]">
+      <DialogContent className="bg-white lg:max-w-[650px]">
         <DialogTitle></DialogTitle>
         <div className="flex flex-col items-center sm:flex-row sm:items-start gap-4">
           {/* IMAGE */}
@@ -84,7 +86,7 @@ const CartDialog = (props: CartProps) => {
           {/* SELECT OPTION */}
           <div className="w-full">
             <div className="mb-2">
-              <h1 className="font-medium">{product.name}</h1>
+              <h1 className="font-medium text-xl">{product.name}</h1>
               <p className="text-md">{product.id + "HHGD-34928"}</p>
             </div>
 
@@ -92,34 +94,43 @@ const CartDialog = (props: CartProps) => {
               <p className="font-medium">${product.price.toFixed(2)}</p>
 
               {/* COLORS */}
-              <div className="flex items-center gap-2">
-                {product.colors.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() =>
-                      handleProductChangeSizeColor({
-                        type: "color",
-                        value: color,
-                      })
-                    }
-                    className={cn(
-                      "w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200",
-                      productSizeColor.color === color
-                        ? "border-black scale-110"
-                        : "border-gray-300 hover:scale-105"
-                    )}
-                  >
-                    <span
-                      className="w-5 h-5 rounded-full"
-                      style={{ backgroundColor: color }}
-                    />
-                  </button>
-                ))}
+              <div className="flex flex-col gap-1">
+                <div className="flex items-center gap-1">
+                  <h4 className="text-md">Màu sắc:</h4>
+                  <span className="font-medium">{productSizeColor.color}</span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {product.colors.map((color) => (
+                    <button
+                      key={color}
+                      onClick={() =>
+                        handleProductChangeSizeColor({
+                          type: "color",
+                          value: color,
+                        })
+                      }
+                      className={cn(
+                        "w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200",
+                        productSizeColor.color === color
+                          ? "border-black scale-110"
+                          : "border-gray-300 hover:scale-105"
+                      )}
+                    >
+                      <span
+                        className="w-5 h-5 rounded-full"
+                        style={{ backgroundColor: color }}
+                      />
+                    </button>
+                  ))}
+                </div>
               </div>
 
               {/* SIZES */}
               <div className="flex flex-col gap-1">
-                <span className="text-gray-500">Kích thước</span>
+                <div className="flex items-center gap-1">
+                  <h4 className="text-md">Kích thước:</h4>
+                  <span className="font-medium">{productSizeColor.size}</span>
+                </div>
                 <div className="flex flex-wrap items-center gap-2">
                   {product.sizes.map((size) => (
                     <button
@@ -142,6 +153,24 @@ const CartDialog = (props: CartProps) => {
                   ))}
                 </div>
               </div>
+
+              {/* ADD TO CART */}
+              <div className="flex items-center gap-4">
+                <QuantityInput />
+                <button className="px-12 py-2 rounded-md bg-black text-white hover:bg-black/80 cursor-pointer">
+                  Thêm vào giỏ
+                </button>
+              </div>
+
+              {/* DETAIL */}
+
+              <Link
+                href={"/"}
+                className="text-sm underline flex items-center gap-1 hover:text-orange-500"
+              >
+                Xem chi tiết
+                <ChevronsRightIcon className="w-4 h-4" />
+              </Link>
             </div>
           </div>
         </div>
