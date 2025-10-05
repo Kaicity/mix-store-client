@@ -34,9 +34,9 @@ export default function RootLayout({
       >
         <Navbar />
         <Categories />
-        <div className="px-3 py-2 sm:px-0 sm:py-0 mx-auto sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
+        <main className="px-3 sm:px-6 lg:px-10 mx-auto max-w-[90rem]">
           {children}
-        </div>
+        </main>
         <Footer />
         <ActionItem />
       </body>

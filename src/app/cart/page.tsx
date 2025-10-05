@@ -1,10 +1,13 @@
 "use client";
 
+import PaymentForm from "@/components/PaymentForm";
+import ShippingForm from "@/components/ShippingForm";
 import { Carts } from "@/types/product";
 import { cn } from "@/utils/tw-merge";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Trash2 } from "lucide-react";
+import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React from "react";
+import React, { useState } from "react";
 const steps = [
   { id: 1, title: "Giỏ Hàng" },
   { id: 2, title: "Địa Chỉ Giao Hàng" },
@@ -73,6 +76,9 @@ const CartPage = () => {
   const router = useRouter();
 
   const activeStep = parseInt(searchParams.get("step") || "1");
+
+  const [shippingForm, setShippingForm] = useState<boolean>(false);
+
   return (
     <div className="flex flex-col gap-8 items-center justify-center mt-12">
       {/* TITLE */}
@@ -111,11 +117,58 @@ const CartPage = () => {
       <div className="w-full flex flex-col lg:flex-row gap-16">
         {/* STEPS */}
         <div className="w-full lg:w-7/12 shadow-lg border-1 border-gray-100 p-8 rounded-lg flex flex-col gap-8">
-          1
+          {activeStep === 1 ? (
+            cartItems.map((cart) => (
+              <div className="flex items-center justify-between" key={cart.id}>
+                {/* IMAGE AND DETAIL */}
+                <div className="flex gap-8">
+                  <div className="relative w-32 h-32 bg-gray-50 rounded-lg overflow-hidden">
+                    <Image
+                      src={cart.images[cart.selectedColor]}
+                      alt={cart.name}
+                      className="object-contain"
+                      fill
+                    />
+                  </div>
+
+                  <div className="flex flex-col justify-between">
+                    <div className="flex flex-col gap-1">
+                      <p className="text-sm font-medium">{cart.name}</p>
+                      <p className="text-xs text-gray-500">
+                        Số lượng: {cart.quantity}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Kích thước: {cart.selectedSize}
+                      </p>
+                      <p className="text-xs text-gray-500">
+                        Màu sắc: {cart.selectedColor}
+                      </p>
+                    </div>
+                    <p className="font-medium">
+                      {cart.price.toLocaleString("vi-VN")}đ
+                    </p>
+                  </div>
+                </div>
+
+                {/* DELETE BUTTON */}
+                <div className="w-8 h-8 bg-red-50 text-red-400 flex items-center justify-center rounded-full cursor-pointer hover:bg-red-200 transition-all duration-300">
+                  <Trash2 className="w-4 h-4" />
+                </div>
+              </div>
+            ))
+          ) : activeStep === 2 ? (
+            <ShippingForm />
+          ) : activeStep === 3 && shippingForm ? (
+            <PaymentForm />
+          ) : (
+            <p className="text-sm text-gray-500">
+              Vui lòng điền đầy đủ thông tin địa chỉ giao hàng để tiếp tục !
+            </p>
+          )}
         </div>
 
         {/* DETAILS */}
-        <div className="w-full lg:w-5/12 shadow-lg border-1 border-gray-100 p-8 rounded-lg flex flex-col gap-8">
+        <div className="w-full h-max lg:w-5/12 shadow-lg border-1 border-gray-100 p-8 rounded-lg flex flex-col gap-8">
           <h2 className="font-semibold">Chi Tiết Giỏ Hàng</h2>
           <div className="flex flex-col gap-4">
             <div className="flex justify-between items-center">

@@ -13,7 +13,7 @@ const ProductCard = (props: ProductCardProps) => {
   const { product } = props;
 
   return (
-    <div className="shadow-md rounded-lg overflow-hidden w-full max-w-[280px]">
+    <div className="shadow-md rounded-lg overflow-hidden w-full max-w-[300px]">
       <Link href={`/products/${product.id}`}>
         <div className="relative aspect-[4/5] w-full">
           <Image
