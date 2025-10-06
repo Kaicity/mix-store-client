@@ -30,14 +30,18 @@ const Navbar = () => {
             <SheetTrigger>
               <Menu className="w-6 h-6 text-white" />
             </SheetTrigger>
+
             <SheetContent
-              side="top"
-              className="bg-gray-900 text-gray-200 h-full"
+              side="left"
+              className="bg-white h-full 
+                transition-transform duration-500 ease-in-out 
+                data-[state=open]:translate-x-0 
+                data-[state=closed]:-translate-x-full"
             >
               <SheetTitle></SheetTitle>
               <SheetHeader>
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2 text-white">
+                  <div className="flex items-center gap-2">
                     <Image
                       src="/logo.png"
                       alt="Mix-Store"

@@ -1,11 +1,10 @@
+import ActionItem from "@/components/ActionItem";
+import Footer from "@/components/Footer";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
+import NavbarItems from "@/components/NavbarItems";
 import Navbar from "@/components/Navbar";
-import Footer from "@/components/Footer";
-import Categories from "@/components/Categories";
-import ActionItem from "@/components/ActionItem";
-import { Dialog } from "@radix-ui/react-dialog";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -33,8 +32,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Navbar />
-        <Categories />
-        <main className="px-3 sm:px-6 lg:px-10 mx-auto max-w-[90rem]">
+        <NavbarItems />
+        <main className="px-3 py-2 sm:px-0 sm:py-0 mx-auto sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
           {children}
         </main>
         <Footer />

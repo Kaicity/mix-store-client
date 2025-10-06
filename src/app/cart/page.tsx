@@ -2,12 +2,14 @@
 
 import PaymentForm from "@/components/PaymentForm";
 import ShippingForm from "@/components/ShippingForm";
+import { ShippingFormInputs } from "@/schemas/shipping-address.schema";
 import { Carts } from "@/types/product";
 import { cn } from "@/utils/tw-merge";
 import { ArrowRight, Trash2 } from "lucide-react";
 import Image from "next/image";
 import { useRouter, useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import { useState } from "react";
+
 const steps = [
   { id: 1, title: "Giỏ Hàng" },
   { id: 2, title: "Địa Chỉ Giao Hàng" },
@@ -77,7 +79,7 @@ const CartPage = () => {
 
   const activeStep = parseInt(searchParams.get("step") || "1");
 
-  const [shippingForm, setShippingForm] = useState<boolean>(false);
+  const [shippingForm, setShippingForm] = useState<ShippingFormInputs>();
 
   return (
     <div className="flex flex-col gap-8 items-center justify-center mt-12">
@@ -157,7 +159,7 @@ const CartPage = () => {
               </div>
             ))
           ) : activeStep === 2 ? (
-            <ShippingForm />
+            <ShippingForm setShippingForm={(data) => setShippingForm(data)} />
           ) : activeStep === 3 && shippingForm ? (
             <PaymentForm />
           ) : (
