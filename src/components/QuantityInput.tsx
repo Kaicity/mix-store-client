@@ -1,18 +1,23 @@
-"use client";
+'use client';
 
-import { useState } from "react";
+import { useEffect } from 'react';
 
-export default function QuantityInput() {
-  const [quantity, setQuantity] = useState(1);
+interface QuantityInputProps {
+  value: number;
+  onChange: (value: number) => void;
+}
+
+export default function QuantityInput({ value, onChange }: QuantityInputProps) {
+  useEffect(() => {}, [value]);
 
   const decrease = () => {
-    if (quantity > 1) {
-      setQuantity(quantity - 1);
+    if (value > 1) {
+      onChange(value - 1);
     }
   };
 
   const increase = () => {
-    setQuantity(quantity + 1);
+    onChange(value + 1);
   };
 
   return (
@@ -20,7 +25,7 @@ export default function QuantityInput() {
       <button onClick={decrease} className="px-3 py-1 text-xl font-bold">
         -
       </button>
-      <span className="px-4">{quantity}</span>
+      <span className="px-4">{value}</span>
       <button onClick={increase} className="px-3 py-1 text-xl font-bold">
         +
       </button>

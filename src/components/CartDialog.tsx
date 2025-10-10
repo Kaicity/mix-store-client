@@ -1,18 +1,20 @@
-"use client";
+'use client';
 
-import type { Product } from "@/types/product";
-import { cn } from "@/utils/tw-merge";
-import { ChevronsRightIcon, ShoppingBasket, ShoppingCart } from "lucide-react";
-import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
-import "swiper/css";
-import "swiper/css/navigation";
-import { Navigation } from "swiper/modules";
-import { Swiper, SwiperSlide } from "swiper/react";
-import { Dialog, DialogContent, DialogTitle, DialogTrigger } from "./ui/dialog";
-import type { Swiper as SwiperType } from "swiper";
-import QuantityInput from "./QuantityInput";
-import Link from "next/link";
+import useCartStore from '@/stores/cartStore';
+import type { Product } from '@/types/product';
+import { cn } from '@/utils/tw-merge';
+import { ChevronsRightIcon, ShoppingBasket } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+import type { Swiper as SwiperType } from 'swiper';
+import 'swiper/css';
+import 'swiper/css/navigation';
+import { Navigation } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import QuantityInput from './QuantityInput';
+import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog';
 
 interface CartProps {
   product: Product;
@@ -21,37 +23,48 @@ interface CartProps {
 const CartDialog = (props: CartProps) => {
   const { product } = props;
 
+  // Zustand hook
+  const { addToCart } = useCartStore();
+
   const [productSizeColor, setProductSizeColor] = useState({
     size: product.sizes[0],
     color: product.colors[0],
   });
 
+  const [quantity, setQuantity] = useState(1);
+
   const swiperRef = useRef<SwiperType | null>(null);
+
+  const [open, setOpen] = useState<boolean>(false);
 
   // khi color đổi -> chạy slideTo
   useEffect(() => {
     if (swiperRef.current) {
-      const index = product.colors.findIndex(
-        (c) => c === productSizeColor.color
-      );
+      const index = product.colors.findIndex((c) => c === productSizeColor.color);
       if (index !== -1) {
         swiperRef.current.slideTo(index);
       }
     }
   }, [productSizeColor.color, product.colors]);
 
-  const handleProductChangeSizeColor = ({
-    type,
-    value,
-  }: {
-    type: "size" | "color";
-    value: string;
-  }) => {
+  const handleProductChangeSizeColor = ({ type, value }: { type: 'size' | 'color'; value: string }) => {
     setProductSizeColor((prev) => ({ ...prev, [type]: value }));
   };
 
+  const handleAddToCart = () => {
+    addToCart({
+      ...product,
+      quantity: quantity,
+      selectedColor: productSizeColor.color,
+      selectedSize: productSizeColor.size,
+    });
+    toast.success('Đã thêm sản phẩm vào giỏ hàng');
+    setOpen(false);
+    setQuantity(1);
+  };
+
   return (
-    <Dialog>
+    <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger className="ring-1 ring-gray-200 shadow-lg rounded-md px-2 py-1 text-sm cursor-pointer hover:text-white hover:bg-black transition-all duration-300 flex items-center gap-2">
         <ShoppingBasket className="w-4 h-4" />
       </DialogTrigger>
@@ -87,7 +100,7 @@ const CartDialog = (props: CartProps) => {
           <div className="w-full">
             <div className="mb-2">
               <h1 className="font-medium text-xl">{product.name}</h1>
-              <p className="text-md">{product.id + "HHGD-34928"}</p>
+              <p className="text-md">{product.id + 'HHGD-34928'}</p>
             </div>
 
             <div className="flex flex-col items-start gap-3">
@@ -105,21 +118,16 @@ const CartDialog = (props: CartProps) => {
                       key={color}
                       onClick={() =>
                         handleProductChangeSizeColor({
-                          type: "color",
+                          type: 'color',
                           value: color,
                         })
                       }
                       className={cn(
-                        "w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200",
-                        productSizeColor.color === color
-                          ? "border-black scale-110"
-                          : "border-gray-300 hover:scale-105"
+                        'w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200',
+                        productSizeColor.color === color ? 'border-black scale-110' : 'border-gray-300 hover:scale-105',
                       )}
                     >
-                      <span
-                        className="w-5 h-5 rounded-full"
-                        style={{ backgroundColor: color }}
-                      />
+                      <span className="w-5 h-5 rounded-full" style={{ backgroundColor: color }} />
                     </button>
                   ))}
                 </div>
@@ -137,15 +145,15 @@ const CartDialog = (props: CartProps) => {
                       key={size}
                       onClick={() =>
                         handleProductChangeSizeColor({
-                          type: "size",
+                          type: 'size',
                           value: size,
                         })
                       }
                       className={cn(
-                        "px-3 py-1 rounded-md text-sm border transition-all duration-200",
+                        'px-3 py-1 rounded-md text-sm border transition-all duration-200',
                         productSizeColor.size === size
-                          ? "bg-black text-white border-black"
-                          : "bg-white text-gray-700 border-gray-300 hover:border-gray-400 hover:bg-gray-50"
+                          ? 'bg-black text-white border-black'
+                          : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400 hover:bg-gray-50',
                       )}
                     >
                       {size.toUpperCase()}
@@ -156,18 +164,18 @@ const CartDialog = (props: CartProps) => {
 
               {/* ADD TO CART */}
               <div className="flex items-center gap-4">
-                <QuantityInput />
-                <button className="px-12 py-2 rounded-md bg-black text-white hover:bg-black/80 cursor-pointer">
+                <QuantityInput value={quantity} onChange={setQuantity} />
+                <button
+                  className="px-12 py-2 rounded-md bg-black text-white hover:bg-black/80 cursor-pointer"
+                  onClick={handleAddToCart}
+                >
                   Thêm vào giỏ
                 </button>
               </div>
 
               {/* DETAIL */}
 
-              <Link
-                href={"/"}
-                className="text-sm underline flex items-center gap-1 hover:text-orange-500"
-              >
+              <Link href={'/'} className="text-sm underline flex items-center gap-1 hover:text-orange-500">
                 Xem chi tiết
                 <ChevronsRightIcon className="w-4 h-4" />
               </Link>

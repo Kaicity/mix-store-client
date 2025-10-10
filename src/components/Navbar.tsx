@@ -1,26 +1,17 @@
-import Image from "next/image";
-import Link from "next/link";
-import React from "react";
-import SearchBar from "./SearchBar";
-import {
-  Bell,
-  Home,
-  Menu,
-  Search,
-  ShoppingCart,
-  Store,
-  User,
-  X,
-} from "lucide-react";
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "./ui/Sheet";
+'use client';
+
+import { Menu, Search, ShoppingCart, Store, User } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import SearchBar from './SearchBar';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/Sheet';
+import useCartStore from '@/stores/cartStore';
 
 const Navbar = () => {
+  const { carts, hasHydrated } = useCartStore();
+
+  if (!hasHydrated) return null;
+
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-gray-200 bg-gray-900">
       <div className="px-2 py-4 md:px-0 mx-auto flex items-center justify-between sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
@@ -42,16 +33,8 @@ const Navbar = () => {
               <SheetHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Image
-                      src="/logo.png"
-                      alt="Mix-Store"
-                      width={30}
-                      height={30}
-                      className="w-6 h-6"
-                    />
-                    <p className="text-md font-medium tracking-wider">
-                      Mix-Store
-                    </p>
+                    <Image src="/logo.png" alt="Mix-Store" width={30} height={30} className="w-6 h-6" />
+                    <p className="text-md font-medium tracking-wider">Mix-Store</p>
                   </div>
                 </div>
               </SheetHeader>
@@ -61,16 +44,8 @@ const Navbar = () => {
 
         {/* LEFT */}
         <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="/logo.png"
-            alt="Mix-Store"
-            width={36}
-            height={36}
-            className="w-8 h-8 md:w-9 md:h-9"
-          />
-          <p className="text-md font-medium tracking-wider text-white">
-            Mix-Store
-          </p>
+          <Image src="/logo.png" alt="Mix-Store" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9" />
+          <p className="text-md font-medium tracking-wider text-white">Mix-Store</p>
         </Link>
 
         {/* CENTER (hidden on mobile) */}
@@ -87,10 +62,10 @@ const Navbar = () => {
             <Store className="w-5 h-5" />
           </Link>
 
-          <Link href={"/cart"} className="relative">
+          <Link href={'/cart'} className="relative">
             <ShoppingCart className="w-5 h-5" />
             <span className="absolute -top-3 -right-3 bg-amber-400 text-gray-600 rounded-full w-4 h-4 flex items-center justify-center font-medium text-xs">
-              0
+              {carts.length}
             </span>
           </Link>
 

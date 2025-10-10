@@ -1,9 +1,9 @@
-"use client";
+'use client';
 
-import { Product } from "@/types/product";
-import Image from "next/image";
-import Link from "next/link";
-import CartDialog from "./CartDialog";
+import { Product } from '@/types/product';
+import Image from 'next/image';
+import Link from 'next/link';
+import CartDialog from './CartDialog';
 
 interface ProductCardProps {
   product: Product;
@@ -27,17 +27,10 @@ const ProductCard = (props: ProductCardProps) => {
 
       <div className="flex flex-col gap-2 p-3">
         <h1 className="font-medium text-sm line-clamp-1">{product.name}</h1>
-        <p className="text-xs text-gray-500 line-clamp-1">
-          {product.shortDescription}
-        </p>
+        <p className="text-xs text-gray-500 line-clamp-1">{product.shortDescription}</p>
 
         <div className="flex items-center justify-between mt-3">
-          <div className="flex items-center gap-2">
-            <p className="font-semibold text-md text-red-600">
-              ${product.price.toFixed(2)}
-            </p>
-            <p className="text-md text-gray-500 line-through">200.000đ</p>
-          </div>
+          <p className="font-semibold text-md text-red-600">${product.price.toFixed(2)}</p>
           <CartDialog product={product} />
         </div>
       </div>
