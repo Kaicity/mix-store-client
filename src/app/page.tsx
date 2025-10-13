@@ -1,13 +1,13 @@
-"use client";
+'use client';
 
-import CarouselItem from "@/components/Carousel";
-import CouponCard from "@/components/CouponCard";
-import ProductList from "@/components/ProductList";
-import ProductSwiper from "@/components/ProductSwiper";
-import Tittle from "@/components/Tittle";
-import { productsData } from "@/data/fake-data";
-import Image from "next/image";
-import Link from "next/link";
+import CarouselItem from '@/components/Carousel';
+import CouponCard from '@/components/CouponCard';
+import ProductList from '@/components/ProductList';
+import ProductSwiper from '@/components/ProductSwiper';
+import Tittle from '@/components/Tittle';
+import { productsData } from '@/data/fake-data';
+import Image from 'next/image';
+import Link from 'next/link';
 
 const Homepage = () => {
   return (
@@ -18,8 +18,8 @@ const Homepage = () => {
       {/* PROMOTION */}
       <div className="w-full">
         <Tittle text="ƯU ĐÃI DÀNH CHO BẠN" />
-        <div className="overflow-x-auto no-scrollbar w-full flex gap-3 mt-4">
-          {[...Array(5)].map((_, idx) => (
+        <div className="overflow-x-auto max-w-screen flex gap-3 mt-4">
+          {[...Array(10)].map((_, idx) => (
             <CouponCard key={idx} />
           ))}
         </div>
@@ -107,10 +107,7 @@ const Homepage = () => {
             <div className="flex items-center justify-between mb-4">
               <Tittle text="ÁO THUN NAM" />
               <div className="flex justify-center">
-                <Link
-                  href="/"
-                  className="text-gray-500 text-sm hover:text-black"
-                >
+                <Link href="/" className="text-gray-500 text-sm hover:text-black">
                   Xem tất cả
                 </Link>
               </div>
@@ -131,10 +128,7 @@ const Homepage = () => {
             <div className="flex items-center justify-between mb-4">
               <Tittle text="ÁO THUN NAM" />
               <div className="flex justify-center">
-                <Link
-                  href="/"
-                  className="text-gray-500 text-sm hover:text-black"
-                >
+                <Link href="/" className="text-gray-500 text-sm hover:text-black">
                   Xem tất cả
                 </Link>
               </div>
@@ -155,10 +149,7 @@ const Homepage = () => {
             <div className="flex items-center justify-between mb-4">
               <Tittle text="ÁO THUN NAM" />
               <div className="flex justify-center">
-                <Link
-                  href="/"
-                  className="text-gray-500 text-sm hover:text-black"
-                >
+                <Link href="/" className="text-gray-500 text-sm hover:text-black">
                   Xem tất cả
                 </Link>
               </div>
@@ -179,10 +170,7 @@ const Homepage = () => {
             <div className="flex items-center justify-between mb-4">
               <Tittle text="ÁO THUN NAM" />
               <div className="flex justify-center">
-                <Link
-                  href="/"
-                  className="text-gray-500 text-sm hover:text-black"
-                >
+                <Link href="/" className="text-gray-500 text-sm hover:text-black">
                   Xem tất cả
                 </Link>
               </div>

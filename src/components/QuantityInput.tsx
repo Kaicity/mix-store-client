@@ -21,12 +21,12 @@ export default function QuantityInput({ value, onChange }: QuantityInputProps) {
   };
 
   return (
-    <div className="flex items-center border rounded-md w-fit">
-      <button onClick={decrease} className="px-3 py-1 text-xl font-bold">
+    <div className="flex items-center border border-gray-200 rounded-md w-fit">
+      <button onClick={decrease} className="px-3 py-1 text-xl font-bold border-r border-gray-200">
         -
       </button>
-      <span className="px-4">{value}</span>
-      <button onClick={increase} className="px-3 py-1 text-xl font-bold">
+      <span className="px-5">{value}</span>
+      <button onClick={increase} className="px-3 py-1 text-xl font-bold border-l border-gray-200">
         +
       </button>
     </div>

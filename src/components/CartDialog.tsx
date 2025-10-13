@@ -65,10 +65,10 @@ const CartDialog = (props: CartProps) => {
 
   return (
     <Dialog open={open} onOpenChange={setOpen}>
-      <DialogTrigger className="ring-1 ring-gray-200 shadow-lg rounded-md px-2 py-1 text-sm cursor-pointer hover:text-white hover:bg-black transition-all duration-300 flex items-center gap-2">
-        <ShoppingBasket className="w-4 h-4" />
+      <DialogTrigger className="cursor-pointer">
+        <Image src="/add-to-cart.png" alt="cart" width={60} height={60} className="object-cover w-5 h-5" />
       </DialogTrigger>
-      <DialogContent className="bg-white lg:max-w-[650px]">
+      <DialogContent className="bg-white lg:max-w-[650px] z-[1000]">
         <DialogTitle></DialogTitle>
         <div className="flex flex-col items-center sm:flex-row sm:items-start gap-4">
           {/* IMAGE */}
@@ -166,7 +166,7 @@ const CartDialog = (props: CartProps) => {
               <div className="flex items-center gap-4">
                 <QuantityInput value={quantity} onChange={setQuantity} />
                 <button
-                  className="px-12 py-2 rounded-md bg-black text-white hover:bg-black/80 cursor-pointer"
+                  className="w-full text-sm px-12 py-2 rounded-md bg-black text-white hover:bg-black/80 cursor-pointer"
                   onClick={handleAddToCart}
                 >
                   Thêm vào giỏ

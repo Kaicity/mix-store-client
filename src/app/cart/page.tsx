@@ -143,7 +143,7 @@ const CartPage = () => {
                         <div className="flex flex-col gap-1">
                           <p className="text-md font-medium">{cart.name}</p>
 
-                          <div className="flex items-center justify-center ring-1 ring-red-500 rounded-md text-red-500 font-medium text-sm">
+                          <div className="w-max px-2 flex items-center justify-center ring-1 ring-red-500 rounded-md text-red-500 font-medium text-sm">
                             Đổi ý 15 ngày
                           </div>
                         </div>
@@ -153,6 +153,16 @@ const CartPage = () => {
                           <p className="text-xs text-gray-500">Kích thước: {cart.selectedSize}</p>
                           <p className="text-xs text-gray-500">Màu sắc: {cart.selectedColor}</p>
                         </div>
+
+                        <div className="md:hidden flex items-center gap-4">
+                          <QuantityInput value={cart.quantity} onChange={(value) => updateQuantity(cart, value)} />
+                          <div
+                            className="w-8 h-8 bg-red-50 text-red-400 flex items-center justify-center rounded-full cursor-pointer hover:bg-red-200 transition-all duration-300"
+                            onClick={() => handleRemoveCart(cart)}
+                          >
+                            <Trash2 className="w-4 h-4" />
+                          </div>
+                        </div>
                       </div>
 
                       {/* PRICE */}
@@ -161,8 +171,7 @@ const CartPage = () => {
                   </div>
 
                   {/* DELETE BUTTON */}
-                  <div className="flex items-center gap-4">
-                    {/* QUANTITY */}
+                  <div className="hidden md:flex items-center gap-4">
                     <QuantityInput value={cart.quantity} onChange={(value) => updateQuantity(cart, value)} />
 
                     <div
@@ -213,7 +222,7 @@ const CartPage = () => {
 
             <div className="flex justify-between items-center">
               <p className="text-gray-500">Phí Vận Chuyển</p>
-              <p className="text-sm font-medium">{(45000).toLocaleString('vi-VN')}đ</p>
+              <p className="text-sm font-medium">{(45000).toLocaleString('vi-VN')}₫</p>
             </div>
 
             <hr className="border-gray-200" />

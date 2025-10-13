@@ -1,8 +1,8 @@
-"use client";
+'use client';
 
-import { cn } from "@/utils/tw-merge";
-import { ChevronUp, Facebook, Phone, PhoneCall } from "lucide-react";
-import { useEffect, useState } from "react";
+import { cn } from '@/utils/tw-merge';
+import { ChevronUp, Facebook, Phone, PhoneCall } from 'lucide-react';
+import { useEffect, useState } from 'react';
 
 const ActionItem = () => {
   const [showButton, setShowButton] = useState(false);
@@ -17,24 +17,22 @@ const ActionItem = () => {
       }
     };
 
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
   return (
     <>
-      <div className="fixed bottom-6 right-6 flex flex-col items-end gap-3 z-[1000]">
+      <div className="fixed bottom-14 right-6 flex flex-col items-end gap-3 z-[1000]">
         {open && (
           <div
             className={cn(
-              "flex flex-col items-end gap-3 mb-2 transition-all duration-300",
-              open
-                ? "opacity-100 translate-y-0"
-                : "opacity-0 translate-y-5 pointer-events-none"
+              'flex flex-col items-end gap-3 mb-2 transition-all duration-300',
+              open ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-5 pointer-events-none',
             )}
           >
             <a
@@ -60,10 +58,7 @@ const ActionItem = () => {
           </div>
         )}
 
-        <button
-          onClick={() => setOpen(!open)}
-          className="p-2 rounded-full ring-1 text-white bg-black"
-        >
+        <button onClick={() => setOpen(!open)} className="p-2 rounded-full ring-1 text-white bg-black">
           <PhoneCall className="w-7 h-7" />
         </button>
 

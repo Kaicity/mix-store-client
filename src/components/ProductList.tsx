@@ -1,5 +1,5 @@
-import { productsData } from "@/data/fake-data";
-import ProductCard from "./ProductCard";
+import { productsData } from '@/data/fake-data';
+import ProductCard from './ProductCard';
 
 const ProductList = () => {
   return (
