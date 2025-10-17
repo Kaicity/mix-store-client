@@ -81,8 +81,8 @@ const ProductDetailPage = () => {
   return (
     <div className="flex flex-col gap-4 lg:flex-row md:gap-12 mt-12">
       {/* IMAGE SLIDER */}
-      <div className="w-full lg:w-5/12">
-        <div className="w-full max-w-[600px] mx-auto lg:sticky lg:top-24">
+      <div className="w-full lg:w-5/12 lg:sticky lg:top-32 self-start h-fit">
+        <div className="w-full max-w-[600px] mx-auto lg:sticky lg:top-6 self-start h-fit">
           {/* Ảnh chính */}
           <Swiper
             modules={[Navigation, Thumbs]}
@@ -120,7 +120,7 @@ const ProductDetailPage = () => {
       </div>
 
       {/* DETAIL */}
-      <div className="w-full lg:w-7/12 flex flex-col gap-4 lg:overflow-y-auto no-scrollbar lg:max-h-[calc(100vh-6rem)] lg:pr-2">
+      <div className="w-full lg:w-7/12 flex flex-col gap-4">
         <h1 className="text-3xl font-medium">{product.name}</h1>
         <div className="flex items-center gap-2">
           <div className="">

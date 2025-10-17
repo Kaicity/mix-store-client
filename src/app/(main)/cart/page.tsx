@@ -49,7 +49,7 @@ const CartPage = () => {
       {/* TITLE */}
       <div className="flex flex-col gap-8 items-start justify-center">
         <div className="flex items-center justify-between w-full">
-          <h1 className="text-3xl font-medium">Giỏ Hàng Của Bạn</h1>
+          <h1 className="text-2xl font-medium">Giỏ Hàng Của Bạn</h1>
           <Link href={'/'} className="hover:underline">
             Tiếp tục mua sắm
           </Link>
@@ -71,41 +71,43 @@ const CartPage = () => {
                   key={cart.id + cart.selectedSize + cart.selectedColor}
                 >
                   {/* IMAGE AND DETAIL */}
-                  <div className="flex gap-8">
+                  <div className="flex items-start gap-4">
                     <div className="relative w-36 h-36 bg-gray-50 rounded-lg overflow-hidden">
                       <Image src={cart.images[cart.selectedColor]} alt={cart.name} className="object-contain" fill />
                     </div>
 
-                    <div className="flex flex-col gap-4">
-                      <div className="flex flex-col gap-2">
-                        {/* DETAIL */}
-                        <div className="flex flex-col gap-1">
-                          <p className="text-md font-medium">{cart.name}</p>
+                    <div className="flex-1">
+                      <div className="flex flex-col gap-4">
+                        <div className="flex flex-col gap-2">
+                          {/* DETAIL */}
+                          <div className="flex flex-col gap-1">
+                            <p className="text-md font-medium">{cart.name}</p>
 
-                          <div className="w-max px-2 flex items-center justify-center ring-1 ring-red-500 rounded-md text-red-500 font-medium text-sm">
-                            Đổi ý 15 ngày
+                            <div className="w-max px-2 flex items-center justify-center ring-1 ring-red-500 rounded-md text-red-500 font-medium text-sm">
+                              Đổi ý 15 ngày
+                            </div>
+                          </div>
+
+                          <div>
+                            <p className="text-xs text-gray-500">Số lượng: {cart.quantity}</p>
+                            <p className="text-xs text-gray-500">Kích thước: {cart.selectedSize}</p>
+                            <p className="text-xs text-gray-500">Màu sắc: {cart.selectedColor}</p>
+                          </div>
+
+                          <div className="md:hidden flex items-center gap-4">
+                            <QuantityInput value={cart.quantity} onChange={(value) => updateQuantity(cart, value)} />
+                            <div
+                              className="w-8 h-8 bg-red-50 text-red-400 flex items-center justify-center rounded-full cursor-pointer hover:bg-red-200 transition-all duration-300"
+                              onClick={() => handleRemoveCart(cart)}
+                            >
+                              <Trash2 className="w-4 h-4" />
+                            </div>
                           </div>
                         </div>
 
-                        <div>
-                          <p className="text-xs text-gray-500">Số lượng: {cart.quantity}</p>
-                          <p className="text-xs text-gray-500">Kích thước: {cart.selectedSize}</p>
-                          <p className="text-xs text-gray-500">Màu sắc: {cart.selectedColor}</p>
-                        </div>
-
-                        <div className="md:hidden flex items-center gap-4">
-                          <QuantityInput value={cart.quantity} onChange={(value) => updateQuantity(cart, value)} />
-                          <div
-                            className="w-8 h-8 bg-red-50 text-red-400 flex items-center justify-center rounded-full cursor-pointer hover:bg-red-200 transition-all duration-300"
-                            onClick={() => handleRemoveCart(cart)}
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </div>
-                        </div>
+                        {/* PRICE */}
+                        <p className="font-medium">{cart.price.toLocaleString('vi-VN')}₫</p>
                       </div>
-
-                      {/* PRICE */}
-                      <p className="font-medium">{cart.price.toLocaleString('vi-VN')}₫</p>
                     </div>
                   </div>
 
