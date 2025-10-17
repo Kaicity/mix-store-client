@@ -252,48 +252,6 @@ const ProductDetailPage = () => {
                   CO GIÃN 4 CHIỀU: Chất liệu co giãn 4 chiều giúp dễ dàng vận động mà không bị gò bó khó chịu
                 </p>
               </div>
-
-              <div className="flex items-start gap-2">
-                <Image src={images[0]} alt="highlight" width={100} height={100} className="object-cover w-20 h-20" />
-                <p className="text-sm text-gray-500">
-                  CO GIÃN 4 CHIỀU: Chất liệu co giãn 4 chiều giúp dễ dàng vận động mà không bị gò bó khó chịu
-                </p>
-              </div>
-
-              <div className="flex items-start gap-2">
-                <Image src={images[0]} alt="highlight" width={100} height={100} className="object-cover w-20 h-20" />
-                <p className="text-sm text-gray-500">
-                  THẤM HÚT MỒ HÔI TỐT: Giữ cho cơ thể luôn khô ráo và thoáng mát phù hợp cho ngày hè năng động
-                </p>
-              </div>
-
-              <div className="flex items-start gap-2">
-                <Image src={images[0]} alt="highlight" width={100} height={100} className="object-cover w-20 h-20" />
-                <p className="text-sm text-gray-500">
-                  CO GIÃN 4 CHIỀU: Chất liệu co giãn 4 chiều giúp dễ dàng vận động mà không bị gò bó khó chịu
-                </p>
-              </div>
-
-              <div className="flex items-start gap-2">
-                <Image src={images[0]} alt="highlight" width={100} height={100} className="object-cover w-20 h-20" />
-                <p className="text-sm text-gray-500">
-                  CO GIÃN 4 CHIỀU: Chất liệu co giãn 4 chiều giúp dễ dàng vận động mà không bị gò bó khó chịu
-                </p>
-              </div>
-
-              <div className="flex items-start gap-2">
-                <Image src={images[0]} alt="highlight" width={100} height={100} className="object-cover w-20 h-20" />
-                <p className="text-sm text-gray-500">
-                  THẤM HÚT MỒ HÔI TỐT: Giữ cho cơ thể luôn khô ráo và thoáng mát phù hợp cho ngày hè năng động
-                </p>
-              </div>
-
-              <div className="flex items-start gap-2">
-                <Image src={images[0]} alt="highlight" width={100} height={100} className="object-cover w-20 h-20" />
-                <p className="text-sm text-gray-500">
-                  CO GIÃN 4 CHIỀU: Chất liệu co giãn 4 chiều giúp dễ dàng vận động mà không bị gò bó khó chịu
-                </p>
-              </div>
             </div>
 
             {/* ADD TO CART MOBILE */}

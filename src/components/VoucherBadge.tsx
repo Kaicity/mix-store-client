@@ -2,7 +2,7 @@ import React from 'react';
 
 const VoucherBadge = () => {
   return (
-    <div className="md:w-max relative inline-block bg-yellow-400 text-black text-sm px-4 py-2 rounded-md shadow-sm">
+    <div className="md:w-max relative inline-block bg-yellow-400 text-black text-sm px-4 py-1 rounded-md shadow-sm">
       <span className="relative z-10">THONGULAR16</span>
 
       {/* Lỗ khoét bên trái */}

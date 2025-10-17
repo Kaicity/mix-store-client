@@ -1,13 +1,10 @@
-"use client";
+'use client';
 
-import {
-  shippingSchema,
-  type ShippingFormInputs,
-} from "@/schemas/shipping-address.schema";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useForm, type SubmitHandler } from "react-hook-form";
+import { shippingSchema, type ShippingFormInputs } from '@/schemas/shipping-address.schema';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { ArrowRight } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { useForm, type SubmitHandler } from 'react-hook-form';
 
 interface ShippingFormProps {
   setShippingForm: (data: ShippingFormInputs) => void;
@@ -28,14 +25,11 @@ const ShippingForm = (props: ShippingFormProps) => {
 
   const handleShippingForm: SubmitHandler<ShippingFormInputs> = (data) => {
     setShippingForm(data);
-    router.push("/cart?step=3", { scroll: false });
+    router.push('/cart?step=3', { scroll: false });
   };
 
   return (
-    <form
-      className="flex flex-col gap-4"
-      onSubmit={handleSubmit(handleShippingForm)}
-    >
+    <form className="flex flex-col gap-4 w-full" onSubmit={handleSubmit(handleShippingForm)}>
       <div className="flex flex-col gap-1">
         <label htmlFor="fullname" className="text-xs text-gray-500 font-medium">
           Họ Tên
@@ -45,11 +39,9 @@ const ShippingForm = (props: ShippingFormProps) => {
           type="text"
           id="name"
           placeholder="Nguyễn Văn A"
-          {...register("fullname")}
+          {...register('fullname')}
         />
-        {errors.fullname && (
-          <p className="text-red-500 text-xs">{errors.fullname.message}</p>
-        )}
+        {errors.fullname && <p className="text-red-500 text-xs">{errors.fullname.message}</p>}
       </div>
 
       <div className="flex flex-col gap-1">
@@ -61,11 +53,9 @@ const ShippingForm = (props: ShippingFormProps) => {
           type="text"
           id="email"
           placeholder="nguyenvana@examle.com"
-          {...register("email")}
+          {...register('email')}
         />
-        {errors.email && (
-          <p className="text-red-500 text-xs">{errors.email.message}</p>
-        )}
+        {errors.email && <p className="text-red-500 text-xs">{errors.email.message}</p>}
       </div>
 
       <div className="flex flex-col gap-1">
@@ -77,11 +67,9 @@ const ShippingForm = (props: ShippingFormProps) => {
           type="text"
           id="phone"
           placeholder="+84"
-          {...register("phone")}
+          {...register('phone')}
         />
-        {errors.phone && (
-          <p className="text-red-500 text-xs">{errors.phone.message}</p>
-        )}
+        {errors.phone && <p className="text-red-500 text-xs">{errors.phone.message}</p>}
       </div>
 
       <div className="flex flex-col gap-1">
@@ -93,11 +81,9 @@ const ShippingForm = (props: ShippingFormProps) => {
           type="text"
           id="address"
           placeholder="Nguyễn Văn A"
-          {...register("address")}
+          {...register('address')}
         />
-        {errors.address && (
-          <p className="text-red-500 text-xs">{errors.address.message}</p>
-        )}
+        {errors.address && <p className="text-red-500 text-xs">{errors.address.message}</p>}
       </div>
 
       <div className="flex flex-col gap-1">
@@ -109,11 +95,9 @@ const ShippingForm = (props: ShippingFormProps) => {
           type="text"
           id="city"
           placeholder="Hồ Chí Minh"
-          {...register("city")}
+          {...register('city')}
         />
-        {errors.city && (
-          <p className="text-red-500 text-xs">{errors.city.message}</p>
-        )}
+        {errors.city && <p className="text-red-500 text-xs">{errors.city.message}</p>}
       </div>
       <button className="w-full bg-gray-800 text-white p-2 rounded-lg flex items-center justify-center gap-1 hover:bg-gray-900 transition-all duration-300 cursor-pointer">
         Tiếp Tục

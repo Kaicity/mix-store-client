@@ -4,7 +4,7 @@ import { Products } from '@/types/product';
 const productsData: Products = [
   {
     id: 1,
-    name: 'Áo Thun CoreFit',
+    name: 'Áo Thun Thể Thao Co Giãn CoreFit Premium',
     shortDescription: 'Áo thun thể thao co giãn thoải mái, phù hợp cho tập luyện hoặc mặc hàng ngày.',
     description:
       'Áo thun CoreFit được làm từ chất liệu cotton pha spandex giúp thấm hút mồ hôi nhanh và co giãn linh hoạt. Thiết kế ôm vừa vặn, dễ phối cùng quần jeans hoặc quần jogger.',
@@ -20,7 +20,7 @@ const productsData: Products = [
   },
   {
     id: 2,
-    name: 'Áo Khoác Puma Ultra Warm',
+    name: 'Áo Khoác Nỉ Puma Ultra Warm Giữ Nhiệt Cao Cấp',
     shortDescription: 'Áo khoác giữ ấm nhẹ, thiết kế thời trang cho mùa lạnh.',
     description:
       'Áo khoác Puma Ultra Warm sử dụng vải nỉ cao cấp, nhẹ và ấm. Kiểu dáng thể thao hiện đại, phù hợp cho cả nam và nữ trong thời tiết se lạnh.',
@@ -32,7 +32,7 @@ const productsData: Products = [
   },
   {
     id: 3,
-    name: 'Áo Thun Nike Air Essentials',
+    name: 'Áo Thun Nam Nike Air Essentials Cotton Mềm Mại',
     shortDescription: 'Áo thun cao cấp Nike, thoáng khí và mềm mại khi mặc.',
     description:
       'Nike Air Essentials được làm từ cotton hữu cơ kết hợp sợi tổng hợp giúp tăng độ bền và cảm giác mát mẻ. Logo Nike in nổi bật ở ngực, thích hợp cho phong cách năng động.',
@@ -48,7 +48,7 @@ const productsData: Products = [
   },
   {
     id: 4,
-    name: 'Áo Thun Nike Flex',
+    name: 'Áo Thun Nike Flex Dri-FIT Co Giãn 4 Chiều',
     shortDescription: 'Áo thun co giãn 4 chiều, cực kỳ thoải mái khi vận động.',
     description:
       'Nike Flex T-Shirt được thiết kế với công nghệ Dri-FIT giúp thấm hút mồ hôi nhanh, mang lại cảm giác khô thoáng suốt cả ngày. Kiểu dáng trẻ trung, năng động.',
@@ -60,7 +60,7 @@ const productsData: Products = [
   },
   {
     id: 5,
-    name: 'Áo Thun Under Armour',
+    name: 'Áo Thể Thao Under Armour Chống Nhăn, Co Giãn Cao Cấp',
     shortDescription: 'Áo thể thao chính hãng Under Armour, chống nhăn và co giãn tốt.',
     description:
       'Under Armour mang lại cảm giác nhẹ, thoáng, với khả năng khử mùi và chống nhăn vượt trội. Thích hợp cho các hoạt động thể thao hoặc đi chơi.',
@@ -76,7 +76,7 @@ const productsData: Products = [
   },
   {
     id: 6,
-    name: 'Giày Nike Air Max 270',
+    name: 'Giày Thể Thao Nike Air Max 270 Đệm Khí Toàn Phần',
     shortDescription: 'Mẫu giày biểu tượng của Nike, êm ái và phong cách.',
     description:
       'Nike Air Max 270 được trang bị đệm Air lớn nhất của Nike giúp nâng đỡ bàn chân tối đa. Thiết kế thể thao năng động, dễ phối đồ cho cả nam và nữ.',
@@ -84,11 +84,10 @@ const productsData: Products = [
     sizes: ['40', '42', '43', '44'],
     colors: ['gray', 'white'],
     images: { gray: '/products/6g.png', white: '/products/6w.png' },
-    tag: ProductTag.BASIC,
   },
   {
     id: 7,
-    name: 'Giày Chạy Nike Ultraboost',
+    name: 'Giày Chạy Bộ Nike Ultraboost Đế Boost Siêu Êm',
     shortDescription: 'Giày chạy bộ cao cấp với độ đàn hồi tuyệt vời.',
     description:
       'Nike Ultraboost sử dụng công nghệ đế Boost êm ái, giúp tăng hiệu suất khi chạy. Thiết kế hiện đại, phù hợp cả khi tập luyện hoặc dạo phố.',
@@ -96,11 +95,10 @@ const productsData: Products = [
     sizes: ['40', '42', '43'],
     colors: ['gray', 'pink'],
     images: { gray: '/products/7g.png', pink: '/products/7p.png' },
-    tag: ProductTag.BASIC,
   },
   {
     id: 8,
-    name: 'Quần Jean Levi’s Classic Denim',
+    name: 'Quần Jean Levi’s Classic Denim Xanh Indigo Dáng Cổ Điển',
     shortDescription: 'Quần jean Levi’s dáng cổ điển, chất liệu denim bền đẹp.',
     description:
       'Levi’s Classic Denim được làm từ vải denim cao cấp, giữ form tốt và ít phai màu. Dễ dàng phối cùng áo thun hoặc áo sơ mi cho phong cách năng động.',
@@ -108,7 +106,6 @@ const productsData: Products = [
     sizes: ['s', 'm', 'l'],
     colors: ['blue', 'green'],
     images: { blue: '/products/8b.png', green: '/products/8gr.png' },
-    tag: ProductTag.BASIC,
   },
 ];
 

@@ -17,7 +17,7 @@ const ProductCard = (props: ProductCardProps) => {
 
   return (
     <div className="shadow-md rounded-md overflow-hidden w-full max-w-[300px] relative bg-white">
-      <div className="absolute top-2 right-2 z-50">
+      <div className="absolute top-2 right-2 z-10">
         <TagProductSeller value={20} />
       </div>
 
@@ -32,8 +32,8 @@ const ProductCard = (props: ProductCardProps) => {
         </div>
       </Link>
 
-      <div className="flex flex-col p-3 gap-4 justify-between">
-        <h1 className="text-sm line-clamp-2">{product.name}</h1>
+      <div className="flex flex-col p-3 gap-4 justify-between min-h-[140px]">
+        <h1 className="text-sm line-clamp-2 min-h-[40px]">{product.name}</h1>
         <TagProduct title={ProductTagLabel[product.tag as ProductTag]} slug={product.tag} />
         <div className="flex items-center justify-between">
           <p className="font-semibold text-sm text-black">{product.price.toLocaleString('vi-VN')}₫</p>
