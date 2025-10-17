@@ -1,5 +1,6 @@
 'use client';
 
+import { Skeleton } from '@/components/ui/skeleton';
 import { shippingSchema, type ShippingFormInputs } from '@/schemas/shipping-address.schema';
 import useCartStore from '@/stores/cartStore';
 import { cn } from '@/utils/tw-merge';
@@ -21,6 +22,12 @@ const CheckoutPage = () => {
   const [discount, setDiscount] = useState(0);
   const [error, setError] = useState('');
 
+  const [loading, setLoading] = useState(true);
+
+  const subtotal = carts.reduce((acc, item) => acc + item.price * item.quantity, 0);
+  const discountAmount = (subtotal * discount) / 100;
+  const final_total = subtotal - discountAmount;
+
   const {
     register,
     handleSubmit,
@@ -28,6 +35,12 @@ const CheckoutPage = () => {
   } = useForm<ShippingFormInputs>({
     resolver: zodResolver(shippingSchema),
   });
+
+  useEffect(() => {
+    setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+  }, []);
 
   useEffect(() => {
     if (hasHydrated && carts.length === 0) {
@@ -45,9 +58,16 @@ const CheckoutPage = () => {
     VIP20: 20,
   };
 
-  const subtotal = carts.reduce((acc, item) => acc + item.price * item.quantity, 0);
-  const discountAmount = (subtotal * discount) / 100;
-  const total = subtotal - discountAmount;
+  const handleApplyCoupon = () => {
+    const upper = coupon.trim().toUpperCase();
+    if (COUPONS[upper]) {
+      setDiscount(COUPONS[upper]);
+      setError('');
+    } else {
+      setDiscount(0);
+      setError('Mã không hợp lệ hoặc đã hết hạn.');
+    }
+  };
 
   const handleShippingForm = () => {};
 
@@ -84,7 +104,10 @@ const CheckoutPage = () => {
                 id="email"
                 placeholder="nguyenvana@example.com"
                 {...register('email')}
-                className="border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className={cn(
+                  'border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2',
+                  errors.email ? 'ring-2 ring-red-500' : 'focus:ring-blue-500 focus:border-blue-500 transition-all',
+                )}
               />
               {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
             </div>
@@ -94,6 +117,34 @@ const CheckoutPage = () => {
                 <input type="checkbox" id="subscribe" className="w-4 h-4 accent-blue-500" />
                 Nhận thông tin khuyến mãi qua email
               </label>
+            </div>
+
+            {/* COUPON */}
+            <div className="col-span-2">
+              <h1 className="text-xl font-medium">Mã giảm giá tại cửa hàng</h1>
+            </div>
+            <div className="flex flex-col gap-2 col-span-2">
+              <label htmlFor="coupon" className="text-sm font-medium text-gray-700">
+                Nhập mã giảm giá (nếu có)
+              </label>
+              <div className="flex gap-2">
+                <input
+                  id="coupon"
+                  type="text"
+                  value={coupon}
+                  onChange={(e) => setCoupon(e.target.value)}
+                  placeholder="Ví dụ: SALE10"
+                  className="flex-1 border border-gray-300 rounded-md px-3 py-2 text-sm outline-none focus:border-gray-800"
+                />
+                <button
+                  type="button"
+                  onClick={handleApplyCoupon}
+                  className="bg-gray-800 text-white text-sm rounded-md px-4 py-2 hover:bg-gray-900 transition-all"
+                >
+                  Áp dụng
+                </button>
+              </div>
+              {error && <p className="text-xs text-red-500">{error}</p>}
             </div>
 
             {/* DELIVERY ADDRESS */}
@@ -128,7 +179,10 @@ const CheckoutPage = () => {
                 id="firstname"
                 placeholder="Tên"
                 {...register('firstname')}
-                className="border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className={cn(
+                  'border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2',
+                  errors.firstname ? 'ring-2 ring-red-500' : 'focus:ring-blue-500 focus:border-blue-500 transition-all',
+                )}
               />
               {errors.firstname && <p className="text-red-500 text-sm">{errors.firstname.message}</p>}
             </div>
@@ -139,14 +193,20 @@ const CheckoutPage = () => {
                 id="lastname"
                 placeholder="Họ"
                 {...register('lastname')}
-                className="border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className={cn(
+                  'border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2',
+                  errors.lastname ? 'ring-2 ring-red-500' : 'focus:ring-blue-500 focus:border-blue-500 transition-all',
+                )}
               />
               {errors.lastname && <p className="text-red-500 text-sm">{errors.lastname.message}</p>}
             </div>
 
             <div className="flex flex-col gap-1 col-span-2">
               <input
-                className="border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className={cn(
+                  'border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2',
+                  errors.address ? 'ring-2 ring-red-500' : 'focus:ring-blue-500 focus:border-blue-500 transition-all',
+                )}
                 type="text"
                 id="address"
                 placeholder="Địa Chỉ(trước khi sát nhập)"
@@ -161,7 +221,10 @@ const CheckoutPage = () => {
                 id="city"
                 placeholder="Tỉnh Thành(trước khi sát nhập)"
                 {...register('city')}
-                className="border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className={cn(
+                  'border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2',
+                  errors.city ? 'ring-2 ring-red-500' : 'focus:ring-blue-500 focus:border-blue-500 transition-all',
+                )}
               />
               {errors.city && <p className="text-red-500 text-sm">{errors.city.message}</p>}
             </div>
@@ -172,7 +235,12 @@ const CheckoutPage = () => {
                 id="postalCode"
                 placeholder="Mã bưu chính(không bắt buộc)"
                 {...register('postalCode')}
-                className="border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className={cn(
+                  'border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2',
+                  errors.postalCode
+                    ? 'ring-2 ring-red-500'
+                    : 'focus:ring-blue-500 focus:border-blue-500 transition-all',
+                )}
               />
               {errors.postalCode && <p className="text-red-500 text-sm">{errors.postalCode.message}</p>}
             </div>
@@ -183,7 +251,10 @@ const CheckoutPage = () => {
                 id="phone"
                 placeholder="Số điện thoại"
                 {...register('phone')}
-                className="border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all"
+                className={cn(
+                  'border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2',
+                  errors.phone ? 'ring-2 ring-red-500' : 'focus:ring-blue-500 focus:border-blue-500 transition-all',
+                )}
               />
               {errors.phone && <p className="text-red-500 text-sm">{errors.phone.message}</p>}
             </div>
@@ -269,7 +340,6 @@ const CheckoutPage = () => {
           </form>
 
           {/* SERVICE LINK */}
-
           <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-6 text-sm border-t border-gray-300 pt-4">
             <Link href="/refund-policy" className="text-blue-700 hover:underline">
               Chính sách hoàn tiền
@@ -292,37 +362,53 @@ const CheckoutPage = () => {
         {/* RIGHT - Order Summary */}
         <div className="flex flex-col gap-6 w-full lg:w-5/12 py-6 lg:sticky lg:top-6 self-start h-fit">
           <div className="flex flex-col gap-4">
-            {carts.map((cart) => (
-              <div className="flex items-start gap-3" key={cart.id}>
-                <div className="relative w-22 h-22 rounded-lg border border-gray-300 bg-gray-200/50">
-                  <Image
-                    src={cart.images[cart.selectedColor]}
-                    alt={cart.selectedColor}
-                    fill
-                    className="object-contain"
-                  />
-
-                  <div className="absolute -top-2 -right-2 rounded-md bg-black w-6 h-6 text-white text-sm font-medium flex items-center justify-center">
-                    {cart.quantity}
-                  </div>
-                </div>
-
+            {loading ? (
+              <div className="flex items-start gap-2">
+                <Skeleton className="w-[80px] h-[80px]" />
                 <div className="flex-1">
-                  <div className="flex flex-col gap-1">
-                    <h2 className="text-sm">{cart.name}</h2>
-                    <p className="text-sm text-gray-500">
-                      {cart.selectedColor} / {cart.selectedSize}
-                    </p>
+                  <div className="flex flex-col gap-3">
+                    <Skeleton className="w-[180px] h-[12px]" />
+                    <Skeleton className="w-[180px] h-[12px]" />
                   </div>
                 </div>
-
-                <p className="text-sm">{cart.price.toLocaleString('vi-VN')} đ</p>
+                <Skeleton className="w-[80px] h-[12px]" />
               </div>
-            ))}
+            ) : (
+              <>
+                {carts.map((cart) => (
+                  <div className="flex items-start gap-3" key={cart.id}>
+                    <div className="relative w-22 h-22 rounded-lg border border-gray-300 bg-gray-200/50">
+                      <Image
+                        src={cart.images[cart.selectedColor]}
+                        alt={cart.selectedColor}
+                        fill
+                        className="object-contain"
+                      />
+
+                      <div className="absolute -top-2 -right-2 rounded-md bg-black w-6 h-6 text-white text-sm font-medium flex items-center justify-center">
+                        {cart.quantity}
+                      </div>
+                    </div>
+
+                    <div className="flex-1">
+                      <div className="flex flex-col gap-1">
+                        <h2 className="text-sm">{cart.name}</h2>
+                        <p className="text-sm text-gray-500">
+                          {cart.selectedColor} / {cart.selectedSize}
+                        </p>
+                      </div>
+                    </div>
+
+                    <p className="text-sm">{cart.price.toLocaleString('vi-VN')} đ</p>
+                  </div>
+                ))}
+              </>
+            )}
 
             <div className="flex items-start justify-between">
               <div className="flex flex-col gap-2">
                 <h2 className="text-md">Tổng thu {carts.length} mặt hàng</h2>
+                <h2>Giảm Giá</h2>
                 <h2 className="text-md">Vận chuyển</h2>
                 <div className="flex items-center gap-1 text-gray-500">
                   <Tag className="w-4 h-4" />
@@ -331,7 +417,16 @@ const CheckoutPage = () => {
               </div>
 
               <div className="flex flex-col items-end gap-2">
-                <h2 className="text-md">{total.toLocaleString('vi-VN')} đ</h2>
+                {loading ? (
+                  <Skeleton className="w-[80px] h-[12px]" />
+                ) : (
+                  <h2 className="text-md">{subtotal.toLocaleString('vi-VN')} đ</h2>
+                )}
+                {loading ? (
+                  <Skeleton className="w-[80px] h-[12px]" />
+                ) : (
+                  <p className="text-sm font-medium">{discount > 0 ? `-${discount}%` : '0%'}</p>
+                )}
                 <p className="text-md">
                   <span className="line-through text-gray-500">19.000 đ</span> MIỄN PHÍ
                 </p>
@@ -340,10 +435,14 @@ const CheckoutPage = () => {
 
             <div className="flex items-center justify-between">
               <h1 className="text-2xl font-medium">Tổng</h1>
-              <p className="text-md">
-                <span className="text-gray-500">VND</span>{' '}
-                <span className="text-2xl font-medium">{subtotal.toLocaleString('vi-VN')}</span>
-              </p>
+              {loading ? (
+                <Skeleton className="w-[120px] h-[12px]" />
+              ) : (
+                <p className="text-md">
+                  <span className="text-gray-500">VND</span>{' '}
+                  <span className="text-2xl font-medium">{final_total.toLocaleString('vi-VN')}</span>
+                </p>
+              )}
             </div>
           </div>
         </div>
