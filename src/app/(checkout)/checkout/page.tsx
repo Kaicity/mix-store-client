@@ -376,7 +376,7 @@ const CheckoutPage = () => {
             ) : (
               <>
                 {carts.map((cart) => (
-                  <div className="flex items-start gap-3" key={cart.id}>
+                  <div className="flex items-start gap-3" key={cart.id + cart.selectedSize + cart.selectedColor}>
                     <div className="relative w-22 h-22 rounded-lg border border-gray-300 bg-gray-200/50">
                       <Image
                         src={cart.images[cart.selectedColor]}

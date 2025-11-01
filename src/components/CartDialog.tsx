@@ -15,6 +15,9 @@ import { Navigation } from 'swiper/modules';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import QuantityInput from './QuantityInput';
 import { Dialog, DialogContent, DialogTitle, DialogTrigger } from './ui/dialog';
+import { notifySuccess } from './ToastContent';
+import { Button } from '@heroui/button';
+import { Tooltip } from '@heroui/react';
 
 interface CartProps {
   product: Product;
@@ -58,7 +61,7 @@ const CartDialog = (props: CartProps) => {
       selectedColor: productSizeColor.color,
       selectedSize: productSizeColor.size,
     });
-    toast.success('Đã thêm sản phẩm vào giỏ hàng');
+    notifySuccess('Đã thêm sản phẩm vào giỏ hàng');
     setOpen(false);
     setQuantity(1);
   };
@@ -114,21 +117,26 @@ const CartDialog = (props: CartProps) => {
                 </div>
                 <div className="flex items-center gap-2">
                   {product.colors.map((color) => (
-                    <button
-                      key={color}
-                      onClick={() =>
-                        handleProductChangeSizeColor({
-                          type: 'color',
-                          value: color,
-                        })
-                      }
-                      className={cn(
-                        'w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200',
-                        productSizeColor.color === color ? 'border-black scale-110' : 'border-gray-300 hover:scale-105',
-                      )}
-                    >
-                      <span className="w-5 h-5 rounded-full" style={{ backgroundColor: color }} />
-                    </button>
+                    <Tooltip key={color} content={color}>
+                      <Button
+                        isIconOnly
+                        variant={productSizeColor.color === color ? 'shadow' : 'flat'}
+                        className={cn(productSizeColor.color === color ? 'bg-black/70' : 'bg-gray-200')}
+                        radius="full"
+                        size="sm"
+                        onPress={() =>
+                          handleProductChangeSizeColor({
+                            type: 'color',
+                            value: color,
+                          })
+                        }
+                      >
+                        <span
+                          className="w-6 h-6 rounded-full border border-gray-200"
+                          style={{ backgroundColor: color }}
+                        />
+                      </Button>
+                    </Tooltip>
                   ))}
                 </div>
               </div>
@@ -141,23 +149,25 @@ const CartDialog = (props: CartProps) => {
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
                   {product.sizes.map((size) => (
-                    <button
+                    <Button
                       key={size}
-                      onClick={() =>
+                      size="sm"
+                      variant={productSizeColor.size === size ? 'solid' : 'bordered'}
+                      color={productSizeColor.size === size ? 'warning' : 'default'}
+                      radius="full"
+                      className={cn(
+                        'transition-all font-medium',
+                        productSizeColor.size === size ? 'shadow-md' : 'hover:border-gray-300 hover:bg-gray-50',
+                      )}
+                      onPress={() =>
                         handleProductChangeSizeColor({
                           type: 'size',
                           value: size,
                         })
                       }
-                      className={cn(
-                        'px-3 py-1 rounded-md text-sm border transition-all duration-200',
-                        productSizeColor.size === size
-                          ? 'bg-black text-white border-black'
-                          : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400 hover:bg-gray-50',
-                      )}
                     >
                       {size.toUpperCase()}
-                    </button>
+                    </Button>
                   ))}
                 </div>
               </div>
@@ -165,12 +175,9 @@ const CartDialog = (props: CartProps) => {
               {/* ADD TO CART */}
               <div className="flex items-center gap-4">
                 <QuantityInput value={quantity} onChange={setQuantity} />
-                <button
-                  className="w-full text-sm px-12 py-2 rounded-md bg-black text-white hover:bg-black/80 cursor-pointer"
-                  onClick={handleAddToCart}
-                >
+                <Button fullWidth className="bg-black text-white" onPress={handleAddToCart}>
                   Thêm vào giỏ
-                </button>
+                </Button>
               </div>
 
               {/* DETAIL */}

@@ -1,6 +1,7 @@
 'use client';
 
 import QuantityInput from '@/components/QuantityInput';
+import { notifySuccess } from '@/components/ToastContent';
 import VoucherBadge from '@/components/VoucherBadge';
 import { ProductTag } from '@/enums/product-tag';
 import useCartStore from '@/stores/cartStore';
@@ -74,7 +75,7 @@ const ProductDetailPage = () => {
       selectedColor: productSizeColor.color,
       selectedSize: productSizeColor.size,
     });
-    toast.success('Đã thêm sản phẩm vào giỏ hàng');
+    notifySuccess('Đã thêm sản phẩm vào giỏ hàng');
     setQuantity(1);
   };
 
@@ -136,7 +137,7 @@ const ProductDetailPage = () => {
           </div>
         </div>
         <p className="text-gray-500">{product.description}</p>
-        <h2 className="text-2xl font-medium">{product.price.toLocaleString('vi-VN')}₫</h2>
+        <span className="text-3xl font-semibold text-red-600">{product.price.toLocaleString('vi-VN')}₫</span>
 
         {/* COUPON */}
         <h2 className="">Mã giảm giá bạn có thể sử dụng</h2>

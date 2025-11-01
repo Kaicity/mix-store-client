@@ -1,16 +1,55 @@
 'use client';
 
+import { categories } from '@/constants/navCategoriesItem';
+import { productsData } from '@/data/fake-data';
+import useCartStore from '@/stores/cartStore';
+import type { Products } from '@/types/product';
 import { Menu, Search, ShoppingCart, Store, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import MobileCategoryItem from './MobileCategoryItem';
 import SearchBar from './SearchBar';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/Sheet';
-import useCartStore from '@/stores/cartStore';
+import { ProductTag } from '@/enums/product-tag';
+
+function SearchDropdown() {
+  return (
+    <div className="absolute top-full w-full overflow-y-scroll max-h-[600px] min-h-[300px] bg-white border border-gray-200 rounded-b-md shadow-lg z-50">
+      <div className="flex justify-center py-2">
+        <h1 className="text-xl font-bold">KẾT QUẢ TÌM KIẾM</h1>
+      </div>
+    </div>
+  );
+}
 
 const Navbar = () => {
-  const { carts, hasHydrated } = useCartStore();
+  const { carts } = useCartStore();
+  const router = useRouter();
 
-  if (!hasHydrated) return null;
+  // if (!hasHydrated) return null;
+
+  const [search, setSearch] = useState<string>('');
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [results, setResults] = useState<Products>([]);
+
+  const handleSearch = () => {
+    if (!search.trim()) return;
+    router.push(`/searchs?q=${encodeURIComponent(search)}`);
+    setSearch('');
+    setShowDropdown(false);
+  };
+
+  useEffect(() => {
+    if (search.trim().length > 1) {
+      setShowDropdown(true);
+      // Giả lập fetch
+      setResults(productsData);
+    } else {
+      setShowDropdown(false);
+    }
+  }, [search]);
 
   return (
     <nav className="sticky top-0 z-50 w-full border-b border-gray-200 bg-gray-900">
@@ -22,14 +61,10 @@ const Navbar = () => {
               <Menu className="w-6 h-6 text-white" />
             </SheetTrigger>
 
-            <SheetContent
-              side="left"
-              className="bg-white h-full 
-                transition-transform duration-500 ease-in-out 
-                data-[state=open]:translate-x-0 
-                data-[state=closed]:-translate-x-full"
-            >
+            <SheetContent side="left" className="bg-white h-full overflow-y-auto px-3 py-4">
               <SheetTitle></SheetTitle>
+
+              {/* HEADER */}
               <SheetHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
@@ -38,6 +73,13 @@ const Navbar = () => {
                   </div>
                 </div>
               </SheetHeader>
+
+              {/* CATEGORY LIST */}
+              <div className="mt-4 flex flex-col gap-2">
+                {categories.map((category) => (
+                  <MobileCategoryItem key={category.slug} category={category} />
+                ))}
+              </div>
             </SheetContent>
           </Sheet>
         </div>
@@ -49,8 +91,56 @@ const Navbar = () => {
         </Link>
 
         {/* CENTER (hidden on mobile) */}
-        <div className="hidden xl:block">
-          <SearchBar />
+        <div className="hidden xl:block relative w-[700px]">
+          <SearchBar
+            search={search}
+            setSearch={setSearch}
+            handleSearch={(value) => console.log('Searching for:', value)}
+            suggestions={[
+              {
+                id: 2,
+                name: 'Áo Khoác Nỉ Puma Ultra Warm Giữ Nhiệt Cao Cấp',
+                shortDescription: 'Áo khoác giữ ấm nhẹ, thiết kế thời trang cho mùa lạnh.',
+                description:
+                  'Áo khoác Puma Ultra Warm sử dụng vải nỉ cao cấp, nhẹ và ấm. Kiểu dáng thể thao hiện đại, phù hợp cho cả nam và nữ trong thời tiết se lạnh.',
+                price: 599000,
+                sizes: ['s', 'm', 'l', 'xl'],
+                colors: ['gray', 'green'],
+                images: { gray: '/products/2g.png', green: '/products/2gr.png' },
+                tag: ProductTag.SALE,
+              },
+              {
+                id: 3,
+                name: 'Áo Thun Nam Nike Air Essentials Cotton Mềm Mại',
+                shortDescription: 'Áo thun cao cấp Nike, thoáng khí và mềm mại khi mặc.',
+                description:
+                  'Nike Air Essentials được làm từ cotton hữu cơ kết hợp sợi tổng hợp giúp tăng độ bền và cảm giác mát mẻ. Logo Nike in nổi bật ở ngực, thích hợp cho phong cách năng động.',
+                price: 699000,
+                sizes: ['s', 'm', 'l'],
+                colors: ['green', 'blue', 'black'],
+                images: {
+                  green: '/products/3gr.png',
+                  blue: '/products/3b.png',
+                  black: '/products/3bl.png',
+                },
+                tag: ProductTag.NEW,
+              },
+              {
+                id: 4,
+                name: 'Áo Thun Nike Flex Dri-FIT Co Giãn 4 Chiều',
+                shortDescription: 'Áo thun co giãn 4 chiều, cực kỳ thoải mái khi vận động.',
+                description:
+                  'Nike Flex T-Shirt được thiết kế với công nghệ Dri-FIT giúp thấm hút mồ hôi nhanh, mang lại cảm giác khô thoáng suốt cả ngày. Kiểu dáng trẻ trung, năng động.',
+                price: 299000,
+                sizes: ['s', 'm', 'l'],
+                colors: ['white', 'pink'],
+                images: { white: '/products/4w.png', pink: '/products/4p.png' },
+                tag: ProductTag.NEW,
+              },
+            ]}
+          />
+
+          {/* {showDropdown && SearchDropdown()} */}
         </div>
 
         {/* RIGHT */}

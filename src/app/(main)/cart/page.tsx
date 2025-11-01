@@ -6,6 +6,7 @@ import { Skeleton } from '@/components/ui/skeleton';
 import useCartStore from '@/stores/cartStore';
 import type { Cart } from '@/types/cart';
 import { cn } from '@/utils/tw-merge';
+import { Button } from '@heroui/react';
 import { ArrowRight, Trash2 } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -50,12 +51,9 @@ const CartPage = () => {
             ) : (
               <>
                 {carts && carts.length > 0 && (
-                  <button
-                    className="flex justify-end cursor-pointer text-sm text-red-500 underline"
-                    onClick={clearCart}
-                  >
+                  <Button variant="light" className="text-red-500 underline" onClick={clearCart}>
                     Xóa tất cả sản phẩm
-                  </button>
+                  </Button>
                 )}
 
                 {carts && carts.length > 0 ? (
@@ -113,7 +111,7 @@ const CartPage = () => {
                         </div>
                       </div>
 
-                      {/* DELETE BUTTON */}
+                      {/* DELETE Button */}
                       <div className="hidden md:flex items-center gap-4">
                         <QuantityInput value={cart.quantity} onChange={(value) => updateQuantity(cart, value)} />
 
@@ -179,19 +177,23 @@ const CartPage = () => {
               </div>
             </div>
 
-            <button
-              disabled={carts.length === 0}
-              onClick={() => router.push('/checkout', { scroll: false })}
+            <Button
+              fullWidth
+              size="lg"
+              variant={carts.length === 0 ? 'flat' : 'solid'}
+              radius="md"
+              isDisabled={carts.length === 0}
+              onPress={() => carts.length !== 0 && router.push('/checkout', { scroll: false })}
               className={cn(
-                'w-full rounded-md p-3 flex items-center justify-center gap-2 text-sm font-medium',
-                carts.length > 0
-                  ? 'bg-gray-800 hover:bg-gray-900 text-white transition-all duration-300 cursor-pointer'
-                  : 'bg-gray-200 text-gray-400 cursor-not-allowed',
+                'font-semibold tracking-wide transition-all duration-300',
+                carts.length === 0
+                  ? 'opacity-70 cursor-not-allowed'
+                  : 'hover:scale-[1.02] active:scale-95 bg-black text-white',
               )}
+              endContent={<ArrowRight className="w-4 h-4" />}
             >
               ĐẶT HÀNG MIỄN PHÍ SHIP
-              <ArrowRight className="w-4 h-4" />
-            </button>
+            </Button>
           </div>
         </div>
       </div>
