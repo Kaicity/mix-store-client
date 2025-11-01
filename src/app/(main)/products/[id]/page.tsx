@@ -7,9 +7,10 @@ import { ProductTag } from '@/enums/product-tag';
 import useCartStore from '@/stores/cartStore';
 import type { Product } from '@/types/product';
 import { cn } from '@/utils/tw-merge';
+import { Button, Tooltip } from '@heroui/react';
 import { CheckSquare } from 'lucide-react';
 import Image from 'next/image';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
 import { useEffect, useRef, useState } from 'react';
 import { toast } from 'react-toastify';
 import type { Swiper as SwiperType } from 'swiper';
@@ -41,6 +42,8 @@ const ProductDetailPage = () => {
   const [thumbsSwiper, setThumbsSwiper] = useState<any>(null);
   const [activeIndex, setActiveIndex] = useState(0);
   const images = product.colors.map((color) => product.images[color]);
+
+  const router = useRouter();
 
   // Zustand hook
   const { addToCart } = useCartStore();
@@ -158,21 +161,26 @@ const ProductDetailPage = () => {
               </div>
               <div className="flex items-center gap-2">
                 {product.colors.map((color) => (
-                  <button
-                    key={color}
-                    onClick={() =>
-                      handleProductChangeSizeColor({
-                        type: 'color',
-                        value: color,
-                      })
-                    }
-                    className={cn(
-                      'w-7 h-7 rounded-full border-2 flex items-center justify-center transition-all duration-200',
-                      productSizeColor.color === color ? 'border-black scale-110' : 'border-gray-300 hover:scale-105',
-                    )}
-                  >
-                    <span className="w-5 h-5 rounded-full" style={{ backgroundColor: color }} />
-                  </button>
+                  <Tooltip key={color} content={color}>
+                    <Button
+                      isIconOnly
+                      variant={productSizeColor.color === color ? 'shadow' : 'flat'}
+                      className={cn(productSizeColor.color === color ? 'bg-black/80' : 'bg-gray-200')}
+                      radius="full"
+                      size="sm"
+                      onPress={() =>
+                        handleProductChangeSizeColor({
+                          type: 'color',
+                          value: color,
+                        })
+                      }
+                    >
+                      <span
+                        className="w-6 h-6 rounded-full border border-gray-200"
+                        style={{ backgroundColor: color }}
+                      />
+                    </Button>
+                  </Tooltip>
                 ))}
               </div>
             </div>
@@ -185,23 +193,25 @@ const ProductDetailPage = () => {
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 {product.sizes.map((size) => (
-                  <button
+                  <Button
                     key={size}
-                    onClick={() =>
+                    size="sm"
+                    variant={productSizeColor.size === size ? 'solid' : 'bordered'}
+                    color={productSizeColor.size === size ? 'warning' : 'default'}
+                    radius="full"
+                    className={cn(
+                      'transition-all font-medium',
+                      productSizeColor.size === size ? 'shadow-md' : 'hover:border-gray-300 hover:bg-gray-50',
+                    )}
+                    onPress={() =>
                       handleProductChangeSizeColor({
                         type: 'size',
                         value: size,
                       })
                     }
-                    className={cn(
-                      'px-3 py-1 rounded-md text-sm border transition-all duration-200',
-                      productSizeColor.size === size
-                        ? 'bg-black text-white border-black'
-                        : 'bg-white text-gray-700 border-gray-300 hover:border-gray-400 hover:bg-gray-50',
-                    )}
                   >
                     {size.toUpperCase()}
-                  </button>
+                  </Button>
                 ))}
               </div>
             </div>
@@ -210,18 +220,18 @@ const ProductDetailPage = () => {
 
             {/* ADD TO CART */}
             <div className="flex items-center gap-2 w-full">
-              <button
-                className="w-full px-4 py-2 rounded-md bg-black text-white hover:bg-black/80 cursor-pointer"
-                onClick={handleAddToCart}
-              >
+              <Button className="w-full bg-black text-white" onClick={handleAddToCart}>
                 Thêm vào giỏ
-              </button>
-              <button
-                className="w-full px-4 py-2 rounded-md ring-1 ring-black text-black hover:bg-black hover:text-white cursor-pointer"
-                onClick={handleAddToCart}
+              </Button>
+              <Button
+                className="w-full bg-white ring-1 ring-black text-black hover:bg-black hover:text-white"
+                onClick={() => {
+                  handleAddToCart();
+                  router.push('/cart');
+                }}
               >
                 Mua ngay
-              </button>
+              </Button>
             </div>
 
             <hr className="mt-3 w-full text-gray-200" />
@@ -255,8 +265,7 @@ const ProductDetailPage = () => {
               </div>
             </div>
 
-            {/* ADD TO CART MOBILE */}
-            <div className="fixed flex bottom-0 left-0 right-0 z-50 lg:hidden border-t-1 border-gray-500">
+            {/* <div className="fixed flex bottom-0 left-0 right-0 z-50 lg:hidden border-t-1 border-gray-500">
               <button
                 className="w-full py-3 bg-black text-white hover:bg-black/80 cursor-pointer"
                 onClick={handleAddToCart}
@@ -269,7 +278,7 @@ const ProductDetailPage = () => {
               >
                 Mua ngay
               </button>
-            </div>
+            </div> */}
           </div>
         </div>
       </div>

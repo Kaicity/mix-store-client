@@ -86,7 +86,7 @@ const CheckoutPage = () => {
       </div>
 
       {/* Body */}
-      <div className="flex flex-col lg:flex-row gap-8 relative">
+      <div className="flex flex-col-reverse lg:flex-row gap-8 relative">
         {/* LEFT - SHIPPING FORM*/}
         <div className="w-full lg:w-7/12 min-h-screen border-r border-gray-300 py-4 pr-6 flex flex-col gap-6">
           <form className="grid grid-cols-1 md:grid-cols-2 gap-4 w-full" onSubmit={handleSubmit(handleShippingForm)}>

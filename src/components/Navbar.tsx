@@ -1,9 +1,10 @@
 'use client';
 
 import { categories } from '@/constants/navCategoriesItem';
-import { productsData } from '@/data/fake-data';
+import { ProductTag } from '@/enums/product-tag';
 import useCartStore from '@/stores/cartStore';
 import type { Products } from '@/types/product';
+import { cn } from '@/utils/tw-merge';
 import { Menu, Search, ShoppingCart, Store, User } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -12,17 +13,8 @@ import { useEffect, useState } from 'react';
 import MobileCategoryItem from './MobileCategoryItem';
 import SearchBar from './SearchBar';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/Sheet';
-import { ProductTag } from '@/enums/product-tag';
-
-function SearchDropdown() {
-  return (
-    <div className="absolute top-full w-full overflow-y-scroll max-h-[600px] min-h-[300px] bg-white border border-gray-200 rounded-b-md shadow-lg z-50">
-      <div className="flex justify-center py-2">
-        <h1 className="text-xl font-bold">KẾT QUẢ TÌM KIẾM</h1>
-      </div>
-    </div>
-  );
-}
+import UserAccount from './UserAccount';
+import { Tooltip } from '@heroui/react';
 
 const Navbar = () => {
   const { carts } = useCartStore();
@@ -31,34 +23,36 @@ const Navbar = () => {
   // if (!hasHydrated) return null;
 
   const [search, setSearch] = useState<string>('');
-  const [showDropdown, setShowDropdown] = useState(false);
-  const [results, setResults] = useState<Products>([]);
-
-  const handleSearch = () => {
-    if (!search.trim()) return;
-    router.push(`/searchs?q=${encodeURIComponent(search)}`);
-    setSearch('');
-    setShowDropdown(false);
-  };
+  const [authenticated, setAuthenticated] = useState(false);
+  const [isNavbarChange, setIsNavbarChange] = useState(false);
 
   useEffect(() => {
-    if (search.trim().length > 1) {
-      setShowDropdown(true);
-      // Giả lập fetch
-      setResults(productsData);
-    } else {
-      setShowDropdown(false);
-    }
-  }, [search]);
+    const handleScroll = () => {
+      if (window.scrollY > 50) {
+        setIsNavbarChange(true);
+      } else {
+        setIsNavbarChange(false);
+      }
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   return (
-    <nav className="sticky top-0 z-50 w-full border-b border-gray-200 bg-gray-900">
+    <nav
+      className={cn(
+        'sticky top-0 z-50 w-full transition-all duration-200',
+        isNavbarChange ? 'bg-black shadow-lg text-white' : 'bg-transparent text-black',
+      )}
+    >
       <div className="px-2 py-4 md:px-0 mx-auto flex items-center justify-between sm:max-w-xl md:max-w-2xl lg:max-w-3xl xl:max-w-6xl">
         {/* MOBILE MENU */}
         <div className="px-2 lg:hidden">
           <Sheet>
             <SheetTrigger>
-              <Menu className="w-6 h-6 text-white" />
+              <Menu className="w-6 h-6" />
             </SheetTrigger>
 
             <SheetContent side="left" className="bg-white h-full overflow-y-auto px-3 py-4">
@@ -87,7 +81,7 @@ const Navbar = () => {
         {/* LEFT */}
         <Link href="/" className="flex items-center gap-2">
           <Image src="/logo.png" alt="Mix-Store" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9" />
-          <p className="text-md font-medium tracking-wider text-white">Mix-Store</p>
+          <p className="text-md font-medium tracking-wider">Mix-Store</p>
         </Link>
 
         {/* CENTER (hidden on mobile) */}
@@ -144,24 +138,34 @@ const Navbar = () => {
         </div>
 
         {/* RIGHT */}
-        <div className="flex items-center gap-6 text-white">
+        <div className="flex items-center gap-6">
           <button className="flex flex-col items-center xl:hidden">
             <Search className="w-5 h-5" />
           </button>
-          <Link href="/" className="flex flex-col items-center">
-            <Store className="w-5 h-5" />
-          </Link>
+          <Tooltip content="Cửa hàng">
+            <Link href="/" className="flex flex-col items-center">
+              <Store className="w-5 h-5" />
+            </Link>
+          </Tooltip>
 
-          <Link href={'/cart'} className="relative">
-            <ShoppingCart className="w-5 h-5" />
-            <span className="absolute -top-3 -right-3 bg-amber-400 text-gray-600 rounded-full w-4 h-4 flex items-center justify-center font-medium text-xs">
-              {carts.length}
-            </span>
-          </Link>
+          <Tooltip content="Xem giỏ hàng">
+            <Link href={'/cart'} className="relative">
+              <ShoppingCart className="w-5 h-5" />
+              <span className="absolute -top-2 -right-2 bg-amber-400 text-black rounded-full w-4 h-4 flex items-center justify-center text-xs">
+                {carts.length}
+              </span>
+            </Link>
+          </Tooltip>
 
-          <Link className="flex flex-col items-center" href="/login">
-            <User className="w-5 h-5" />
-          </Link>
+          {authenticated ? (
+            <UserAccount />
+          ) : (
+            <Tooltip content="Đăng nhập tài khoản">
+              <Link className="flex flex-col items-center" href="/login">
+                <User className="w-5 h-5" />
+              </Link>
+            </Tooltip>
+          )}
         </div>
       </div>
     </nav>

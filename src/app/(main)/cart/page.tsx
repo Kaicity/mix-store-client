@@ -33,7 +33,7 @@ const CartPage = () => {
   const subtotal = carts.reduce((acc, item) => acc + item.price * item.quantity, 0);
 
   return (
-    <div className="mt-12">
+    <div className="mt-6">
       {/* TITLE */}
       <div className="flex flex-col gap-8 items-start justify-center">
         <div className="flex items-center justify-between w-full">
@@ -51,9 +51,11 @@ const CartPage = () => {
             ) : (
               <>
                 {carts && carts.length > 0 && (
-                  <Button variant="light" className="text-red-500 underline" onClick={clearCart}>
-                    Xóa tất cả sản phẩm
-                  </Button>
+                  <div className="flex justify-end">
+                    <Button className="w-max" color="danger" variant="flat" onClick={clearCart}>
+                      Làm mới giỏ hàng
+                    </Button>
+                  </div>
                 )}
 
                 {carts && carts.length > 0 ? (

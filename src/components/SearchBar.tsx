@@ -33,6 +33,7 @@ const SearchBar = ({ search, setSearch, handleSearch, suggestions = [] }: Search
       defaultItems={filtered.map((item) => ({ label: item, value: item }))}
       aria-label="Search products"
       placeholder="Bạn đang tìm gì..."
+      className="text-black"
       startContent={<Search className="w-4 h-4 text-gray-400" />}
       variant="faded"
       radius="lg"
@@ -56,7 +57,7 @@ const SearchBar = ({ search, setSearch, handleSearch, suggestions = [] }: Search
 
             {/* Tên & Giá */}
             <div className="flex flex-col gap-1">
-              <span className="truncate font-medium text-gray-800">{item.name}</span>
+              <span className="truncate font-medium">{item.name}</span>
               <span className="text-xs text-red-500">{item.price.toLocaleString('vi-VN')}₫</span>
             </div>
           </div>

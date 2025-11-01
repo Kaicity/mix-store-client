@@ -53,7 +53,7 @@ const Homepage = () => {
             className="w-full h-auto object-cover rounded-sm shadow mb-6"
             sizes="100vw"
           />
-          <ProductList />
+          <ProductList products={productsData} />
         </div>
       </div>
 

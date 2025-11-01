@@ -23,11 +23,11 @@ const Breadcrumbs = ({ items, className }: BreadcrumbsProps) => {
         return (
           <div key={index} className="flex items-center gap-1">
             {item.href && !isLast ? (
-              <Link href={item.href} className="hover:text-yellow-600 transition-colors">
+              <Link href={item.href} className="hover:text-amber-600 transition-colors">
                 {item.name}
               </Link>
             ) : (
-              <span className={cn(isLast ? 'text-yellow-600 font-medium' : '')}>{item.name}</span>
+              <span className={cn(isLast ? 'text-amber-600 font-medium' : '')}>{item.name}</span>
             )}
             {!isLast && <span className="text-gray-400">/</span>}
           </div>
