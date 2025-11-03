@@ -16,6 +16,8 @@ import { ReviewsModule } from '@/modules/reviews/reviews.module';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthModule } from './common/auth/auth.module';
 import { GuardsModule } from './common/guards/guards.module';
+import { MailerModule } from '@nestjs-modules/mailer';
+import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 
 @Module({
   imports: [
@@ -59,6 +61,36 @@ import { GuardsModule } from './common/guards/guards.module';
     // Authentication Guards route api protected
     AuthModule,
     GuardsModule,
+
+    // Mailer
+    MailerModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: async (configService: ConfigService) => ({
+        transport: {
+          host: 'smtp.gmail.com',
+          port: 465,
+          secure: true,
+          // ignoreTLS: true,
+          // secure: false,
+          auth: {
+            user: configService.get<string>('MAIL_USER'),
+            pass: configService.get<string>('MAIL_PASSWORD'),
+          },
+        },
+        defaults: {
+          from: '"No Reply" <no-reply@localhost>',
+        },
+        // preview: true,
+        // template: {
+        //   dir: process.cwd() + '/template/',
+        //   adapter: new HandlebarsAdapter(), // or new PugAdapter() or new EjsAdapter()
+        //   options: {
+        //     strict: true,
+        //   },
+        // },
+      }),
+      inject: [ConfigService],
+    }),
   ],
   controllers: [AppController],
   providers: [AppService],
