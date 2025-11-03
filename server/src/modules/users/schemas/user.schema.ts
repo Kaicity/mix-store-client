@@ -5,33 +5,34 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema({ timestamps: true })
 export class User {
-  @Prop()
+  @Prop({ required: true, trim: true })
   name: string;
 
-  @Prop()
+  @Prop({ required: true, unique: true, lowercase: true, trim: true })
   email: string;
 
   @Prop()
   password: string;
 
-  @Prop()
+  @Prop({ trim: true })
   phone: string;
 
-  @Prop()
+  @Prop({ trim: true })
   address: string;
 
   @Prop()
   image: string;
 
-  @Prop({ default: 'USERS' })
+  @Prop({ enum: ['USER', 'ADMIN'], default: 'USER' })
   role: string;
 
-  @Prop({ default: 'LOCAL' })
+  @Prop({ enum: ['LOCAL', 'GOOGLE', 'FACEBOOK'], default: 'LOCAL' })
   accountType: string;
 
-  @Prop()
+  @Prop({ default: true })
   isActive: boolean;
 
+  // Dùng cho verify email hoặc reset password
   @Prop()
   codeId: string;
 
