@@ -9,6 +9,14 @@ export const hashPasswordHelper = async (plainPassword: string) => {
   }
 };
 
+export const comparePasswordHelper = async (plainPassword: string, hashPassword: string) => {
+  try {
+    return await bcrypt.compare(plainPassword, hashPassword);
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const generateRandomCode = () => {
   const prefix = 'u-emix-';
   const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';

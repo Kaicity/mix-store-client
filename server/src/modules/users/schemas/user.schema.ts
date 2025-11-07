@@ -14,10 +14,10 @@ export class User {
   @Prop()
   password: string;
 
-  @Prop({ trim: true })
+  @Prop()
   phone: string;
 
-  @Prop({ trim: true })
+  @Prop()
   address: string;
 
   @Prop()
@@ -29,7 +29,7 @@ export class User {
   @Prop({ enum: ['LOCAL', 'GOOGLE', 'FACEBOOK'], default: 'LOCAL' })
   accountType: string;
 
-  @Prop({ default: true })
+  @Prop()
   isActive: boolean;
 
   // Dùng cho verify email hoặc reset password

@@ -1,119 +1,61 @@
-import { JwtAuthGuard } from '@/common/auth/auth.guard';
 import { Roles } from '@/common/decorators/roles.decorator';
 import { UserRole } from '@/common/enums/role.enum';
-import { HTTP_RESPONSE } from '@/common/helpers/response.helper';
-import {
-  BadRequestException,
-  Body,
-  Controller,
-  Get,
-  HttpStatus,
-  Param,
-  Post,
-  Put,
-  Query,
-  Req,
-  UseGuards,
-} from '@nestjs/common';
+import { paginate } from '@/common/helpers/paginate';
+import { ResponseInterceptor } from '@/common/interceptors/response.interceptor';
+import { Body, Controller, Get, Param, Post, Put, Query, Req, UseInterceptors } from '@nestjs/common';
 import type { Request } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
-import { SignInDto } from './dto/sign-in.dto';
-import { UsersService } from './users.service';
-import { paginate } from '@/common/helpers/paginate';
-import { RolesGuard } from '@/common/guards/roles.guard';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { MailerService } from '@nestjs-modules/mailer';
-import { Public } from '@/common/decorators/public.decorator';
+import { UsersService } from './users.service';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 
+@ApiTags('Users')
+@ApiBearerAuth('Bearer')
+@UseInterceptors(ResponseInterceptor)
 @Controller('users')
 export class UsersController {
-  constructor(
-    private readonly usersService: UsersService,
-    private readonly mailerService: MailerService,
-  ) {}
+  constructor(private readonly usersService: UsersService) {}
 
   @Post('create-account')
-  @Public()
-  async register(@Body() createUserDto: CreateUserDto) {
-    const result = await this.usersService.createNewAccount(createUserDto);
-
-    if (!result.success) {
-      throw new BadRequestException(result.error);
-    }
-    return HTTP_RESPONSE(result.data, 'Tạo tài khoản thành công', HttpStatus.CREATED);
+  @ApiBody({ type: CreateUserDto, description: 'Create - user' })
+  async register(@Body() dto: CreateUserDto) {
+    return this.usersService.create(dto);
   }
 
-  @Post('sign-in')
-  @Public()
-  async signIn(@Body() signInDto: SignInDto) {
-    const result = await this.usersService.signIn(signInDto);
-
-    if (!result.success) {
-      throw new BadRequestException(result.error);
-    }
-
-    return HTTP_RESPONSE(result.data, 'Đăng nhập thành công', HttpStatus.OK);
-  }
-
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.USER)
   @Get('get-users')
+  @ApiOperation({ summary: 'Get all users with optional filters' })
+  @ApiQuery({ name: 'page', description: 'Page of', required: false, type: Number, example: 1 })
+  @ApiQuery({
+    name: 'limit',
+    description: 'Maximum number of items to return',
+    required: false,
+    type: Number,
+    example: 10,
+  })
+  @ApiQuery({ name: 'search', description: 'Search keyword by name', required: false, type: String })
+  @ApiQuery({ name: 'role', description: 'Filter by role', required: false, type: String })
+  @ApiQuery({ name: 'isActive', description: 'Filter by isActive', required: false, type: String })
   async getAll(@Req() req: Request) {
     const { page, limit, skip, search } = paginate(req);
     const { role } = req.query;
-
-    const result = await this.usersService.getAllUsers({ page, limit, skip, search, role: role as string });
-
-    return HTTP_RESPONSE(result.data, 'Lấy danh sách người đùng thành công', HttpStatus.OK);
+    return this.usersService.getAll({
+      page,
+      limit,
+      skip,
+      search,
+      role: role as string,
+    });
   }
 
-  @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles(UserRole.ADMIN, UserRole.USER)
   @Get('get-user')
   async getUser(@Query('userId') email: string) {
-    const result = await this.usersService.getUser(email);
-
-    if (!result.success) {
-      throw new BadRequestException(result.error);
-    }
-
-    return HTTP_RESPONSE(result.data, 'Lấy chi tiết người dùng thành công', HttpStatus.OK);
+    return this.usersService.getByEmail(email);
   }
 
-  @UseGuards(JwtAuthGuard)
-  @Post('change-password')
-  async changePassword(@Body() dto: SignInDto) {
-    const result = await this.usersService.changePassword(dto);
-
-    if (!result.success) {
-      throw new BadRequestException(result.error);
-    }
-
-    return HTTP_RESPONSE(result.data, 'Đổi mật khẩu thành công', HttpStatus.ACCEPTED);
-  }
-
-  @UseGuards(JwtAuthGuard)
   @Put('update-account/:id')
   async updateUser(@Param('id') email: string, @Body() dto: UpdateUserDto) {
-    const result = await this.usersService.updateUser(email, dto);
-
-    if (!result.success) {
-      throw new BadRequestException(result.error);
-    }
-
-    return HTTP_RESPONSE(result.data, 'Đổi mật khẩu thành công', HttpStatus.OK);
-  }
-
-  @Get('email')
-  @Public()
-  testMail() {
-    this.mailerService.sendMail({
-      to: 'thanhtruckingbear@gmail.com', // list of receivers
-      subject: 'Testing Nest MailerModule ✔', // Subject line
-      text: 'welcome', // plaintext body
-      html: '<b>Hello Itmix</b>', // HTML body content
-    });
-
-    return 'ok';
+    return this.usersService.update(email, dto);
   }
 }

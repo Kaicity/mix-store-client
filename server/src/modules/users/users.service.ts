@@ -1,20 +1,19 @@
-import { Injectable } from '@nestjs/common';
+import { hashPasswordHelper } from '@/common/helpers/utils';
+import { MailerService } from '@nestjs-modules/mailer';
+import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { generateRandomCode, hashPasswordHelper } from '@/common/helpers/utils';
-import { User, type UserDocument } from './schemas/user.schema';
+import { v4 as uuidv4 } from 'uuid';
 import { CreateUserDto } from './dto/create-user.dto';
-const bcrypt = require('bcrypt');
-import { JwtService } from '@nestjs/jwt';
 import { UpdateUserDto } from './dto/update-user.dto';
-import { RESPONSE_ERROR, RESPONSE_SUCCESS } from '@/common/constant/response';
-import { SignInDto } from './dto/sign-in.dto';
+import { User, type UserDocument } from './schemas/user.schema';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class UsersService {
   constructor(
     @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
-    private jwtService: JwtService,
+    private readonly mailerService: MailerService,
   ) {}
 
   private async isEmailExist(email: string): Promise<boolean> {
@@ -22,65 +21,36 @@ export class UsersService {
     return !!user;
   }
 
-  async createNewAccount(dto: CreateUserDto) {
-    // check mail exist
+  async create(dto: CreateUserDto) {
     const isExist = await this.isEmailExist(dto.email);
-    if (isExist) return RESPONSE_ERROR(`Email: ${dto.email} đã tồn tại, vui lòng sử dụng email khác`);
+    if (isExist) throw new BadRequestException(`Email ${dto.email} đã tồn tại, vui lòng sử dụng email khác`);
 
-    // hash password
     const hashPassword = await hashPasswordHelper(dto.password);
-
-    const userId = generateRandomCode();
+    const codeId = uuidv4();
 
     const newUser = await this.userModel.create({
-      ...dto, // Spread - khong lay password , spread lay het cac thuoc tinh con lai
-      userId,
+      ...dto,
       password: hashPassword,
+      isActive: false,
+      codeId: codeId,
+      codeExpired: dayjs().add(30, 'seconds'),
     });
 
-    return RESPONSE_SUCCESS({ email: newUser.email, name: newUser.name });
-  }
-
-  async signIn(dto: SignInDto) {
-    const { email, password } = dto;
-    const user = await this.userModel.findOne({ email });
-
-    if (!user) return RESPONSE_ERROR(`Tài khoản người dùng không tồn tại`);
-
-    const isMatchPassword = await bcrypt.compare(password, user.password);
-    if (!isMatchPassword) return RESPONSE_ERROR(`Tài khoản hoặc mật khẩu không đúng`);
-
-    const payload = { sub: user.id, username: user.email, role: user.role };
-    const access_token = await this.jwtService.signAsync(payload);
-
-    return RESPONSE_SUCCESS({
-      user: {
-        name: user.name,
-        email: user.email,
-        image: user.image,
-        role: user.role,
-      },
-      access_token,
+    await this.mailerService.sendMail({
+      to: newUser.email,
+      subject: 'Kích hoạt tài khoản của bạn tại @eMixShop',
+      template: 'register',
+      context: { name: newUser.name ?? newUser.email, activationCode: codeId },
     });
+
+    return {
+      message: 'Tạo tài khoản thành công',
+      data: { email: newUser.email, name: newUser.name },
+    };
   }
 
-  async getAllUsers({
-    page,
-    limit,
-    skip,
-    search,
-    role,
-    status,
-  }: {
-    page: number;
-    limit: number;
-    skip: number;
-    search?: string;
-    role?: string;
-    status?: string;
-  }) {
+  async getAll({ page, limit, skip, search, role, status }: any) {
     const query: any = {};
-
     if (search) query.$or = [{ email: { $regex: search, $options: 'i' } }];
     if (role) query.role = role;
     if (status) query.status = status;
@@ -90,31 +60,35 @@ export class UsersService {
       this.userModel.find(query).skip(skip).limit(limit).sort({ createdAt: -1 }),
     ]);
 
-    return RESPONSE_SUCCESS({
-      data: users.map((item) => ({
-        name: item.name,
-        email: item.email,
-        role: item.role,
-        phone: item.phone,
-        address: item.address,
-        image: item.image,
-        isActive: item.isActive,
-      })),
-      pagination: {
-        totalItems: total,
-        currentPage: page,
-        totalPages: Math.ceil(total / limit),
-        limit,
+    return {
+      message: 'Lấy danh sách người dùng thành công',
+      data: {
+        users: users.map((u) => ({
+          name: u.name,
+          email: u.email,
+          role: u.role,
+          phone: u.phone,
+          address: u.address,
+          image: u.image,
+          isActive: u.isActive,
+        })),
+        pagination: {
+          totalItems: total,
+          currentPage: page,
+          totalPages: Math.ceil(total / limit),
+          limit,
+        },
       },
-    });
+    };
   }
 
-  async getUser(email: string) {
-    const user = await this.userModel.findOne({ email });
-    if (!user) return RESPONSE_ERROR('Không tìm thấy người dùng này');
+  async getByEmail(id: string) {
+    const user = await this.userModel.findById(id);
+    if (!user) throw new NotFoundException('Không tìm thấy người dùng này');
 
-    return RESPONSE_SUCCESS({
-      user: {
+    return {
+      message: 'Lấy chi tiết người dùng thành công',
+      data: {
         name: user.name,
         email: user.email,
         role: user.role,
@@ -123,40 +97,34 @@ export class UsersService {
         image: user.image,
         isActive: user.isActive,
       },
-    });
+    };
   }
 
-  async changePassword(dto: SignInDto) {
-    const { email, password } = dto;
-
-    const user = await this.userModel.findOne({ email });
-    if (!user) return RESPONSE_ERROR('Không tìm thấy người dùng này');
-
-    // hash password
-    const hashPassword = await hashPasswordHelper(password);
-
-    await this.userModel.findByIdAndUpdate(user._id, { password: hashPassword });
-
-    return RESPONSE_SUCCESS({});
-  }
-
-  async updateUser(email: string, dto: UpdateUserDto) {
+  async update(email: string, dto: UpdateUserDto) {
     const existedUser = await this.userModel.findOne({ email });
-    if (!existedUser) return RESPONSE_ERROR(`Không tìm thấy người dùng có email: ${email}`);
+    if (!existedUser) throw new NotFoundException(`Không tìm thấy người dùng có email: ${email}`);
 
-    // hash password
-    const hashPassword = await hashPasswordHelper(dto.password);
+    const updateData: any = { ...dto, updatedAt: new Date() };
+    if (dto.password) {
+      updateData.password = await hashPasswordHelper(dto.password);
+    }
 
-    const user = await this.userModel.findByIdAndUpdate(
-      existedUser._id.toString(),
-      { ...dto, password: hashPassword, updatedAt: new Date() },
-      { new: true },
-    );
-
-    return RESPONSE_SUCCESS({
-      name: user.name,
-      image: user.image,
-      role: user.role,
+    const user = await this.userModel.findByIdAndUpdate(existedUser._id, updateData, {
+      new: true,
     });
+
+    return {
+      message: 'Cập nhật người dùng thành công',
+      data: {
+        name: user.name,
+        email: user.email,
+        role: user.role,
+        image: user.image,
+      },
+    };
+  }
+
+  async findByEmail(email: string) {
+    return await this.userModel.findOne({ email });
   }
 }
