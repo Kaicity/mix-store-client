@@ -16,13 +16,14 @@ import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiSecurity, ApiTags } 
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
+  @Roles(UserRole.ADMIN, UserRole.USER)
   @Post('create-account')
-  @ApiBody({ type: CreateUserDto, description: 'Create - user' })
+  @ApiBody({ type: CreateUserDto, description: 'Create new user' })
   async register(@Body() dto: CreateUserDto) {
     return this.usersService.create(dto);
   }
 
-  @Roles(UserRole.ADMIN, UserRole.USER)
+  @Roles(UserRole.ADMIN)
   @Get('get-users')
   @ApiOperation({ summary: 'Get all users with optional filters' })
   @ApiQuery({ name: 'page', description: 'Page of', required: false, type: Number, example: 1 })
