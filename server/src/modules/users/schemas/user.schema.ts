@@ -1,3 +1,5 @@
+import { UserRole } from '@/common/enums/role.enum';
+import { UserAccountType } from '@/common/enums/user-account-type.enum';
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { HydratedDocument } from 'mongoose';
 
@@ -23,10 +25,10 @@ export class User {
   @Prop()
   image: string;
 
-  @Prop({ enum: ['USER', 'ADMIN'], default: 'USER' })
+  @Prop({ enum: UserRole, default: UserRole.USER })
   role: string;
 
-  @Prop({ enum: ['LOCAL', 'GOOGLE', 'FACEBOOK'], default: 'LOCAL' })
+  @Prop({ enum: UserAccountType, default: UserAccountType.LOCAL })
   accountType: string;
 
   @Prop()

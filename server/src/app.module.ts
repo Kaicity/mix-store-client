@@ -4,34 +4,32 @@ import { LikesModule } from '@/modules/likes/likes.module';
 import { UsersModule } from '@/modules/users/users.module';
 import { Module } from '@nestjs/common';
 
-import { MenuItemOptionsModule } from '@/modules/menu.item.options/menu.item.options.module';
-import { MenuItemsModule } from '@/modules/menu.items/menu.items.module';
-import { MenusModule } from '@/modules/menus/menus.module';
-import { OrderDetailModule } from '@/modules/order.detail/order.detail.module';
 import { OrdersModule } from '@/modules/orders/orders.module';
-import { RestaurantsModule } from '@/modules/restaurants/restaurants.module';
 import { ReviewsModule } from '@/modules/reviews/reviews.module';
 import { MailerModule } from '@nestjs-modules/mailer';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { MongooseModule } from '@nestjs/mongoose';
 import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
 import { JwtAuthGuard } from './auth/passport/jwt-auth.guard';
+import { ProductsModule } from './modules/products/products.module';
+import { CategoriesModule } from './modules/categories/categories.module';
+import { PaymentsModule } from './modules/payments/payments.module';
+import { AgenciesModule } from './modules/agencies/agencies.module';
 
 @Module({
   imports: [
     // Modules bussiness
     UsersModule,
     LikesModule,
-    MenuItemOptionsModule,
-    MenuItemsModule,
-    MenusModule,
-    OrderDetailModule,
     OrdersModule,
-    RestaurantsModule,
     ReviewsModule,
     AuthModule,
+    ProductsModule,
+    CategoriesModule,
+    PaymentsModule,
+    AgenciesModule,
 
     // Config root module
     ConfigModule.forRoot({ isGlobal: true }),
