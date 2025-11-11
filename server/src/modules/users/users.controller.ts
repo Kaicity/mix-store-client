@@ -2,12 +2,12 @@ import { Roles } from '@/common/decorators/roles.decorator';
 import { UserRole } from '@/common/enums/role.enum';
 import { paginate } from '@/common/helpers/paginate';
 import { ResponseInterceptor } from '@/common/interceptors/response.interceptor';
-import { Body, Controller, Get, Param, Post, Put, Query, Req, UseInterceptors } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Query, Req, UseInterceptors } from '@nestjs/common';
+import { ApiBearerAuth, ApiBody, ApiOperation, ApiParam, ApiQuery, ApiTags } from '@nestjs/swagger';
 import type { Request } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
-import { ApiBearerAuth, ApiBody, ApiOperation, ApiQuery, ApiSecurity, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Users')
 @ApiBearerAuth('Bearer')
@@ -17,10 +17,10 @@ export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
   @Roles(UserRole.ADMIN, UserRole.USER)
-  @Post('create-account')
+  @Post('create-user')
   @ApiBody({ type: CreateUserDto, description: 'Create new user' })
   async register(@Body() dto: CreateUserDto) {
-    return this.usersService.create(dto);
+    return await this.usersService.create(dto);
   }
 
   @Roles(UserRole.ADMIN)
@@ -52,11 +52,17 @@ export class UsersController {
   @Roles(UserRole.ADMIN, UserRole.USER)
   @Get('get-user')
   async getUser(@Query('userId') email: string) {
-    return this.usersService.getByEmail(email);
+    return await this.usersService.getByEmail(email);
   }
 
   @Put('update-account/:id')
   async updateUser(@Param('id') email: string, @Body() dto: UpdateUserDto) {
-    return this.usersService.update(email, dto);
+    return await this.usersService.update(email, dto);
+  }
+
+  @Delete('delete-user/:id')
+  @ApiParam({ name: 'id', example: '690cf549a158b2e7375aab11' })
+  async removeUser(@Param('id') id: string) {
+    return await this.usersService.removeById(id);
   }
 }

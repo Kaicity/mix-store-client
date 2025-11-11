@@ -1,13 +1,16 @@
-import { comparePasswordHelper } from '@/common/helpers/utils';
+import { comparePasswordHelper, generateVerifyCode, hashPasswordHelper } from '@/common/helpers/utils';
 import { UsersService } from '@/modules/users/users.service';
-import { Injectable } from '@nestjs/common';
+import { MailerService } from '@nestjs-modules/mailer';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import * as dayjs from 'dayjs';
 
 @Injectable()
 export class AuthService {
   constructor(
     private usersService: UsersService,
     private jwtService: JwtService,
+    private readonly mailerService: MailerService,
   ) {}
 
   async validateUser(username: string, password: string): Promise<any> {
@@ -24,5 +27,51 @@ export class AuthService {
     return {
       access_token: this.jwtService.sign(payload),
     };
+  }
+
+  async forgotPassword(email: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (!user) throw new BadRequestException('Email không tồn tại');
+
+    const codeId = generateVerifyCode();
+    const codeExpired = dayjs().add(5, 'minute').toDate(); // hết hạn sau 10 phút
+
+    user.codeId = codeId;
+    user.codeExpired = codeExpired;
+    await user.save();
+
+    await this.mailerService.sendMail({
+      to: user.email,
+      subject: 'Xác nhận quên mật khẩu',
+      template: 'register',
+      context: { name: user.name ?? user.email, activationCode: codeId },
+    });
+
+    return {
+      message: 'Vui lòng kiểm tra email của bạn để đặt lại mật khẩu',
+    };
+  }
+
+  async verifyCode(email: string, codeId: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (!user || user.codeId !== codeId) throw new BadRequestException('Mã không hợp lệ');
+
+    if (dayjs().isAfter(user.codeExpired)) throw new BadRequestException('Mã đã hết hạn');
+
+    return { message: 'Mã hợp lệ' };
+  }
+
+  async resetPassword(email: string, codeId: string, newPassword: string) {
+    const user = await this.usersService.findByEmail(email);
+    if (!user || user.codeId !== codeId) throw new BadRequestException('Mã không hợp lệ');
+
+    if (dayjs().isAfter(user.codeExpired)) throw new BadRequestException('Mã đã hết hạn');
+
+    user.password = await hashPasswordHelper(newPassword);
+    user.codeId = null;
+    user.codeExpired = null;
+    await user.save();
+
+    return { message: 'Đặt lại mật khẩu thành công' };
   }
 }

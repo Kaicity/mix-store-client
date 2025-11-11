@@ -40,7 +40,7 @@ export class JwtAuthGuard extends AuthGuard('jwt') {
     }
 
     // Console debug
-    console.log('QUYỀN ĐƯỢC PHÉP:', requiredRoles);
+    console.log('QUYỀN ĐƯỢC PHÉP:', requiredRoles ?? 'PUBLIC');
     console.log('QUYỀN HIỆN TẠI:', user.role);
 
     return user;
