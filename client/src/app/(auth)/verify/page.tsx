@@ -5,9 +5,9 @@ import { resendCode } from '@/apis/client/user.api';
 import { notifyError, notifySuccess } from '@/components/ToastContent';
 import { InputOTP, InputOTPGroup, InputOTPSeparator, InputOTPSlot } from '@/components/ui/input-otp';
 import { pinCodeSchema, type PinCodeFormInput } from '@/schemas/pin-code';
-import { Button } from '@heroui/react';
+import { Button, InputOtp } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
-import { ArrowRight, TimerReset } from 'lucide-react';
+import { ArrowRight, Key, LockKeyhole, TimerReset } from 'lucide-react';
 import { useRouter, useSearchParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -70,19 +70,21 @@ const VerifyPage = () => {
                 name="pin"
                 control={control}
                 render={({ field }) => (
-                  <InputOTP maxLength={6} value={field.value} onChange={field.onChange}>
-                    <InputOTPGroup>
-                      <InputOTPSlot index={0} />
-                      <InputOTPSlot index={1} />
-                      <InputOTPSlot index={2} />
-                    </InputOTPGroup>
-                    <InputOTPSeparator />
-                    <InputOTPGroup>
-                      <InputOTPSlot index={3} />
-                      <InputOTPSlot index={4} />
-                      <InputOTPSlot index={5} />
-                    </InputOTPGroup>
-                  </InputOTP>
+                  // <InputOTP maxLength={6} value={field.value} onChange={field.onChange}>
+                  //   <InputOTPGroup>
+                  //     <InputOTPSlot index={0} />
+                  //     <InputOTPSlot index={1} />
+                  //     <InputOTPSlot index={2} />
+                  //   </InputOTPGroup>
+                  //   <InputOTPSeparator />
+                  //   <InputOTPGroup>
+                  //     <InputOTPSlot index={3} />
+                  //     <InputOTPSlot index={4} />
+                  //     <InputOTPSlot index={5} />
+                  //   </InputOTPGroup>
+                  // </InputOTP>
+
+                  <InputOtp length={6} value={field.value} onValueChange={field.onChange} />
                 )}
               />
 
@@ -94,8 +96,8 @@ const VerifyPage = () => {
             <p className="text-xs text-gray-400">Nhập mã xác minh đã được gửi đến email của bạn</p>
             {errors.pin && <p className="text-xs text-red-500">{errors.pin.message}</p>}
             <Button isLoading={loading} type="submit" className="w-full bg-black text-white">
-              Đăng nhập
-              <ArrowRight className="w-3 h-3" />
+              Xác thực
+              <LockKeyhole className="w-4 h-4" />
             </Button>
           </form>
         </div>

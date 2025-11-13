@@ -1,52 +1,39 @@
 'use client';
 
-import { login } from '@/apis/client/auth.api';
+import { registerAccount } from '@/apis/client/user.api';
 import { EyeFilledIcon, EyeSlashFilledIcon } from '@/components/svg/eyesIcon';
 import { notifyError } from '@/components/ToastContent';
-import { useAuth } from '@/hooks/useAuth';
-import { loginRequestSchema, type LoginRequestFormInput } from '@/schemas/login-request';
-import useAuthStore from '@/stores/authStore';
-import { cn } from '@/utils/tw-merge';
+import { registerRequestSchema, type RegisterRequestFormInput } from '@/schemas/register-request';
 import { Button, Input } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { redirect, useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 
-const LoginPage = () => {
+const RegisterPage = () => {
   const router = useRouter();
-  const { setAccessToken } = useAuthStore();
-  const { isAuthenticated } = useAuth();
-
-  useEffect(() => {
-    if (isAuthenticated) redirect('/');
-  }, [isAuthenticated]);
 
   const {
     register,
     handleSubmit,
     formState: { errors, isSubmitting },
-  } = useForm<LoginRequestFormInput>({
-    resolver: zodResolver(loginRequestSchema),
+  } = useForm<RegisterRequestFormInput>({
+    resolver: zodResolver(registerRequestSchema),
   });
 
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
 
-  const onSubmit = async (data: LoginRequestFormInput) => {
+  const onSubmit = async (data: RegisterRequestFormInput) => {
     try {
-      const { email, password } = data;
-      const result = await login({ username: email, password: password });
-      setAccessToken(result?.access_token);
-      router.push('/');
+      const result = await registerAccount(data);
+      console.log(result);
+      router.push(`/verify?email=${encodeURIComponent(data.email)}`);
     } catch (err: any) {
       notifyError(err.message);
-      if (err.statusCode === 403) {
-        router.push(`/verify?email=${encodeURIComponent(data.email)}`);
-      }
     }
   };
 
@@ -62,22 +49,46 @@ const LoginPage = () => {
 
         <div className="flex flex-col gap-4">
           <div className="flex flex-col gap-1">
-            <h1 className="text-lg font-medium">Đăng Nhập</h1>
-            <p className="text-xs text-gray-400">Nhập email của bạn để chúng tôi gửi cho bạn mã xác minh</p>
+            <h1 className="text-lg font-medium">Đăng Ký Tài Khoản</h1>
+            <p className="text-xs text-gray-400">Nhập các thông tin cơ bản</p>
           </div>
 
           <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
             <Input
-              {...register('email')}
-              label="Email"
-              placeholder="nguyenvana@example.com"
+              label="Họ tên"
+              placeholder="Nhập họ tên đầy đủ"
+              type="text"
+              {...register('name')}
               variant="bordered"
+              isClearable
+              isInvalid={!!errors.name}
+              errorMessage={errors.name?.message}
+            />
+
+            <Input
+              label="+84"
+              placeholder="Nhập số điện thoại"
+              type="text"
+              {...register('phone')}
+              variant="bordered"
+              isClearable
+              isInvalid={!!errors.phone}
+              errorMessage={errors.phone?.message}
+            />
+
+            <Input
+              label="Tên tài khoản / Email"
+              placeholder="Nhập tài khoản email"
+              type="email"
+              {...register('email')}
+              variant="bordered"
+              isClearable
               isInvalid={!!errors.email}
               errorMessage={errors.email?.message}
             />
 
             <Input
-              label="Mật khẩu"
+              label="password"
               placeholder="Nhập mật khẩu"
               type={isVisible ? 'text' : 'password'}
               {...register('password')}
@@ -101,17 +112,10 @@ const LoginPage = () => {
             />
 
             <Button isLoading={isSubmitting} type="submit" className="w-full bg-black text-white">
-              Đăng nhập
-              <ArrowRight className="w-4 h-4" />
+              Đăng ký
+              <ArrowRight className="w-3 h-3" />
             </Button>
           </form>
-
-          <div className="flex items-center gap-2 text-xs justify-end">
-            <p className=" text-gray-400">Bạn chưa có tài khoản?</p>
-            <Link href="/register" className="text-blue-500 font-bold hover:underline">
-              Đăng ký ngay
-            </Link>
-          </div>
 
           <div className="flex items-center gap-3">
             <Link href={'/'}>
@@ -127,4 +131,4 @@ const LoginPage = () => {
   );
 };
 
-export default LoginPage;
+export default RegisterPage;

@@ -69,7 +69,7 @@ const Navbar = () => {
               <SheetHeader>
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <Image src="/logo.png" alt="Mix-Store" width={30} height={30} className="w-6 h-6" />
+                    <Image src="/logo-store.webp" alt="Mix-Store" width={30} height={30} className="w-6 h-6" />
                     <p className="text-md font-medium tracking-wider">Mix-Store</p>
                   </div>
                 </div>
@@ -86,9 +86,15 @@ const Navbar = () => {
         </div>
 
         {/* LEFT */}
-        <Link href="/" className="flex items-center gap-2">
-          <Image src="/logo.png" alt="Mix-Store" width={36} height={36} className="w-8 h-8 md:w-9 md:h-9" />
-          <p className="text-md font-medium tracking-wider">Mix-Store</p>
+        <Link href="/" className="flex items-center">
+          <Image
+            src="/logo-store.webp"
+            alt="Mix-Store"
+            width={100}
+            height={100}
+            className="hidden md:block w-20 h-10 object-cover"
+          />
+          <p className="text-md md:text-lg font-medium tracking-wider">eMix-Store</p>
         </Link>
 
         {/* CENTER (hidden on mobile) */}

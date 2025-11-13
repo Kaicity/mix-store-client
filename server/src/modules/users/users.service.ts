@@ -26,7 +26,7 @@ export class UsersService {
 
   async create(dto: CreateUserDto) {
     const isExist = await this.isEmailExist(dto.email);
-    if (isExist) throw new BadRequestException(`Email ${dto.email} đã tồn tại, vui lòng sử dụng email khác`);
+    if (isExist) throw new BadRequestException(`Email đã tồn tại, vui lòng sử dụng email khác`);
 
     const hashPassword = await hashPasswordHelper(dto.password);
 
