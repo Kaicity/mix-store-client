@@ -1,15 +1,23 @@
-import { hashPasswordHelper } from '@/common/helpers/utils';
+import { generateVerifyCode, hashPasswordHelper } from '@/common/helpers/utils';
 import { MailerService } from '@nestjs-modules/mailer';
-import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
+import { BadRequestException, forwardRef, Inject, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User, type UserDocument } from './schemas/user.schema';
+import * as dayjs from 'dayjs';
+import { AuthService } from '@/auth/auth.service';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User.name) private readonly userModel: Model<UserDocument>) {}
+  constructor(
+    @InjectModel(User.name) private readonly userModel: Model<UserDocument>,
+    private readonly mailerService: MailerService,
+    @Inject(forwardRef(() => AuthService)) private authService: AuthService,
+    private configService: ConfigService,
+  ) {}
 
   private async isEmailExist(email: string): Promise<boolean> {
     const user = await this.userModel.findOne({ email });
@@ -22,10 +30,25 @@ export class UsersService {
 
     const hashPassword = await hashPasswordHelper(dto.password);
 
+    const codeId = generateVerifyCode();
+
     const newUser = await this.userModel.create({
       ...dto,
       password: hashPassword,
+      codeId: codeId,
+      codeExpired: dayjs().add(5, 'minute').toDate(),
       isActive: false,
+    });
+
+    await this.mailerService.sendMail({
+      to: newUser.email,
+      subject: 'Kích hoạt tài khoản của bạn',
+      template: 'register',
+      context: {
+        name: newUser.name ?? newUser.email,
+        activationCode: codeId,
+        client_domain: this.configService.get<string>('CLIENT_PORT'),
+      },
     });
 
     return {
@@ -34,31 +57,29 @@ export class UsersService {
     };
   }
 
-  async register(dto: { email: string; password?: string; name?: string; provider?: 'local' | 'google' }) {
-    const isExist = await this.isEmailExist(dto.email);
-    if (isExist) {
-      throw new BadRequestException('Email đã tồn tại, vui lòng đăng nhập');
-    }
+  async resendCode(email: string) {
+    const user = await this.findByEmail(email);
+    if (!user) throw new BadRequestException('Email không tồn tại');
 
-    let hashPassword = null;
-    if (dto.password) {
-      hashPassword = await hashPasswordHelper(dto.password);
-    }
+    const codeId = generateVerifyCode();
 
-    const newUser = await this.userModel.create({
-      email: dto.email,
-      password: hashPassword, // nếu là google -> null
-      name: dto.name ?? 'Người dùng mới',
-      provider: dto.provider ?? 'local',
-      isActive: true, // user đăng ký tự động active
-      createdAt: new Date(),
+    user.codeId = codeId;
+    user.codeExpired = dayjs().add(5, 'minute').toDate();
+    await user.save();
+
+    await this.mailerService.sendMail({
+      to: user.email,
+      subject: 'Kích hoạt tài khoản của bạn',
+      template: 'register',
+      context: {
+        name: user.name ?? user.email,
+        activationCode: codeId,
+        client_domain: this.configService.get<string>('CLIENT_PORT'),
+      },
     });
 
-    const { password, ...userData } = newUser.toObject();
-
     return {
-      message: 'Đăng ký tài khoản thành công',
-      data: userData,
+      message: 'Mã code đã được gửi đến email',
     };
   }
 

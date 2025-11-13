@@ -29,10 +29,17 @@ export class AuthController {
   }
 
   @Public()
-  @Post('verify-code')
+  @Post('verify-reset-password')
   @ApiBody({ type: VerifyCodeDto, description: 'Verify your code' })
-  verifyCode(@Body() dto: VerifyCodeDto) {
-    return this.authService.verifyCode(dto.email, dto.codeId);
+  verifyResetPassword(@Body() dto: VerifyCodeDto) {
+    return this.authService.verifyResetPassword(dto.email, dto.codeId);
+  }
+
+  @Public()
+  @Post('verify-account')
+  @ApiBody({ type: VerifyCodeDto, description: 'Verify your code' })
+  verifyAccount(@Body() dto: VerifyCodeDto) {
+    return this.authService.verifyAccount(dto.email, dto.codeId);
   }
 
   @Public()

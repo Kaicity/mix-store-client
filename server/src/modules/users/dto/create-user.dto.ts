@@ -1,10 +1,10 @@
 import { UserRole } from '@/common/enums/role.enum';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, MinLength } from 'class-validator';
+import { IsEmail, IsEnum, IsNotEmpty, IsOptional, IsString, Matches, MaxLength, MinLength } from 'class-validator';
 
 export class CreateUserDto {
-  @IsNotEmpty({ message: 'Tên không được để trống' })
-  @ApiProperty({ example: 'nguyenvana' })
+  @IsOptional()
+  @ApiProperty({ example: 'Nguyễn Minh Thông' })
   name: string;
 
   @IsNotEmpty({ message: 'Email không được để trống' })
@@ -12,15 +12,21 @@ export class CreateUserDto {
   @ApiProperty({ example: 'nguyenminhthongitmix@gmail.com' })
   email: string;
 
-  @IsOptional()
+  @ApiProperty({ example: 'Abc@12345', description: 'Mật khẩu người dùng' })
   @IsString({ message: 'Mật khẩu phải là chuỗi ký tự' })
-  @MinLength(6, { message: 'Mật khẩu phải có ít nhất 6 ký tự' })
-  @ApiProperty({ example: '12345678' })
+  @MinLength(8, { message: 'Mật khẩu phải có ít nhất 8 ký tự' })
+  @MaxLength(32, { message: 'Mật khẩu không được vượt quá 32 ký tự' })
+  @Matches(/^(?=.*[a-z])/, { message: 'Mật khẩu phải chứa ít nhất 1 chữ thường' })
+  @Matches(/^(?=.*[A-Z])/, { message: 'Mật khẩu phải chứa ít nhất 1 chữ hoa' })
+  @Matches(/^(?=.*\d)/, { message: 'Mật khẩu phải chứa ít nhất 1 chữ số' })
+  @Matches(/^(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
+    message: 'Mật khẩu phải chứa ít nhất 1 ký tự đặc biệt (@$!%*?&)',
+  })
   password: string;
 
   @IsOptional()
-  @IsString({ message: 'Số điện thoại Không hợp lệ' })
-  @ApiProperty({ example: '0703338458' })
+  @Matches(/^(0|\+84)[0-9]{9}$/, { message: 'Số điện thoại không hợp lệ' })
+  @ApiProperty({ example: '0909585806' })
   phone: string;
 
   @IsOptional()

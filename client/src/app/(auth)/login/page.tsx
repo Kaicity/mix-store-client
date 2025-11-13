@@ -1,18 +1,28 @@
 'use client';
 
+import { login } from '@/apis/client/auth.api';
+import { EyeFilledIcon, EyeSlashFilledIcon } from '@/components/svg/eyesIcon';
+import { notifyError } from '@/components/ToastContent';
+import { useAuth } from '@/hooks/useAuth';
 import { loginRequestSchema, type LoginRequestFormInput } from '@/schemas/login-request';
-import { cn } from '@/utils/tw-merge';
-import { Button } from '@heroui/react';
+import useAuthStore from '@/stores/authStore';
+import { Button, Input } from '@heroui/react';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { ArrowRight } from 'lucide-react';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { redirect, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 
 const LoginPage = () => {
   const router = useRouter();
+  const { setAccessToken } = useAuthStore();
+  const { isAuthenticated } = useAuth();
+
+  useEffect(() => {
+    if (isAuthenticated) redirect('/');
+  }, [isAuthenticated]);
 
   const {
     register,
@@ -24,14 +34,21 @@ const LoginPage = () => {
 
   const [loading, setLoading] = useState(false);
 
+  const [isVisible, setIsVisible] = useState(false);
+  const toggleVisibility = () => setIsVisible(!isVisible);
+
   const onSubmit = async (data: LoginRequestFormInput) => {
     setLoading(true);
     try {
-      console.log('Submitting...', data);
-      await new Promise((res) => setTimeout(res, 1000));
-      router.push('/verify');
-    } catch (err) {
-      console.error(err);
+      const { email, password } = data;
+      const result = await login({ username: email, password: password });
+      setAccessToken(result?.access_token);
+      router.push('/');
+    } catch (err: any) {
+      notifyError(err.message);
+      if (err.statusCode === 403) {
+        router.push(`/verify?email=${encodeURIComponent(data.email)}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -54,17 +71,47 @@ const LoginPage = () => {
           </div>
 
           <form className="flex flex-col gap-3" onSubmit={handleSubmit(onSubmit)}>
-            <input
-              type="text"
-              id="email"
-              placeholder="nguyenvana@example.com"
+            <Input
+              classNames={{
+                innerWrapper: errors.email ? 'border-danger' : '',
+              }}
+              isRequired
+              label="Email"
+              placeholder="Nhập tài khoản email"
+              type="email"
               {...register('email')}
-              className={cn(
-                'border border-gray-300 p-3 outline-none text-sm rounded-lg focus:ring-2',
-                errors.email ? 'ring-2 ring-red-500' : 'focus:ring-blue-500 focus:border-blue-500 transition-all',
-              )}
+              variant="bordered"
+              isClearable
+              errorMessage={errors.email?.message}
             />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email.message}</p>}
+
+            <Input
+              classNames={{
+                innerWrapper: errors.password ? 'border-danger' : '',
+              }}
+              isRequired
+              label="password"
+              placeholder="Nhập mật khẩu"
+              type={isVisible ? 'text' : 'password'}
+              {...register('password')}
+              variant="bordered"
+              endContent={
+                <button
+                  aria-label="toggle password visibility"
+                  className="focus:outline-solid outline-transparent"
+                  type="button"
+                  onClick={toggleVisibility}
+                >
+                  {isVisible ? (
+                    <EyeSlashFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  ) : (
+                    <EyeFilledIcon className="text-2xl text-default-400 pointer-events-none" />
+                  )}
+                </button>
+              }
+              errorMessage={errors.password?.message}
+            />
+
             <Button isLoading={loading} type="submit" className="w-full bg-black text-white">
               Tiếp tục
               <ArrowRight className="w-3 h-3" />

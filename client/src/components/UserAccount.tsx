@@ -2,7 +2,11 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Avatar, User, Di
 import { ChevronDown } from 'lucide-react';
 import React from 'react';
 
-const UserAccount = () => {
+interface UserAccountProps {
+  handleLogout: () => void;
+}
+
+const UserAccount = ({ handleLogout }: UserAccountProps) => {
   return (
     <Dropdown placement="bottom-start">
       <DropdownTrigger>
@@ -31,7 +35,7 @@ const UserAccount = () => {
         <DropdownItem key="settings">Hồ sơ</DropdownItem>
         <DropdownItem key="team_settings">Cài đặt</DropdownItem>
         <DropdownItem key="analytics">Feedback với chúng tôi</DropdownItem>
-        <DropdownItem key="logout" color="danger">
+        <DropdownItem onClick={handleLogout} key="logout" color="danger">
           Đăng xuất
         </DropdownItem>
       </DropdownMenu>

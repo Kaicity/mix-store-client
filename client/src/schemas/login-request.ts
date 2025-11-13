@@ -1,7 +1,8 @@
 import { z } from 'zod';
 
 export const loginRequestSchema = z.object({
-  email: z.email().min(1, 'Vui lòng nhập email của bạn'),
+  email: z.email().nonempty('Email là bắt buộc'),
+  password: z.string().min(1, 'Nhập mật khẩu'),
 });
 
 export type LoginRequestFormInput = z.infer<typeof loginRequestSchema>;

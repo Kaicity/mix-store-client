@@ -15,16 +15,23 @@ import SearchBar from './SearchBar';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from './ui/Sheet';
 import UserAccount from './UserAccount';
 import { Tooltip } from '@heroui/react';
+import { useAuth } from '@/hooks/useAuth';
 
 const Navbar = () => {
   const { carts } = useCartStore();
   const router = useRouter();
+
+  const { logout, isAuthenticated } = useAuth();
 
   // if (!hasHydrated) return null;
 
   const [search, setSearch] = useState<string>('');
   const [authenticated, setAuthenticated] = useState(false);
   const [isNavbarChange, setIsNavbarChange] = useState(false);
+
+  useEffect(() => {
+    setAuthenticated(isAuthenticated);
+  }, [authenticated, isAuthenticated, logout]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -158,7 +165,7 @@ const Navbar = () => {
           </Tooltip>
 
           {authenticated ? (
-            <UserAccount />
+            <UserAccount handleLogout={logout} />
           ) : (
             <Tooltip content="Đăng nhập tài khoản">
               <Link className="flex flex-col items-center" href="/login">

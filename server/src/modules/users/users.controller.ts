@@ -8,6 +8,8 @@ import type { Request } from 'express';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UsersService } from './users.service';
+import { Public } from '@/common/decorators/public.decorator';
+import { ForgotPasswordDto } from '@/auth/dto/forgot-password.dto';
 
 @ApiTags('Users')
 @ApiBearerAuth('Bearer')
@@ -16,7 +18,7 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private readonly usersService: UsersService) {}
 
-  @Roles(UserRole.ADMIN, UserRole.USER)
+  @Public()
   @Post('create-user')
   @ApiBody({ type: CreateUserDto, description: 'Create new user' })
   async register(@Body() dto: CreateUserDto) {
@@ -64,5 +66,12 @@ export class UsersController {
   @ApiParam({ name: 'id', example: '690cf549a158b2e7375aab11' })
   async removeUser(@Param('id') id: string) {
     return await this.usersService.removeById(id);
+  }
+
+  @Public()
+  @Post('resend-code')
+  @ApiBody({ type: ForgotPasswordDto, description: 'Resend code' })
+  async resendCode(@Body() dto: ForgotPasswordDto) {
+    return await this.usersService.resendCode(dto.email);
   }
 }

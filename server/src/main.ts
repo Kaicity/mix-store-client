@@ -30,6 +30,9 @@ async function bootstrap() {
   const options = {
     explorer: true,
     customCss: theme.getBuffer(SwaggerThemeNameEnum.DARK),
+    swaggerOptions: {
+      persistAuthorization: true, // 🔥 giữ lại token sau khi reload
+    },
   };
   SwaggerModule.setup('api-docs', app, documentFactory, options);
 
@@ -43,6 +46,8 @@ async function bootstrap() {
     }),
   );
   app.setGlobalPrefix('api/v1', { exclude: [''] });
+
+  app.enableCors();
 
   await app.listen(port);
 }

@@ -1,6 +1,6 @@
-import { toast, ToastContainer } from 'react-toastify';
+import { AlertTriangle, CheckCircle, XCircle } from 'lucide-react';
+import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import { CheckCircle, AlertTriangle, XCircle } from 'lucide-react';
 
 export const notifySuccess = (msg: string) => {
   toast.success(

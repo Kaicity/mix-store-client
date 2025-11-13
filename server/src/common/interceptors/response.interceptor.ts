@@ -11,7 +11,7 @@ export class ResponseInterceptor<T> implements NestInterceptor<T, ApiResponse<T>
         return {
           statusCode: response.statusCode,
           message: data?.message || 'Success',
-          data: data?.data ?? data,
+          data: data?.data ? data : null,
           timestamp: new Date().toISOString(),
           path: context.switchToHttp().getRequest().url,
         };

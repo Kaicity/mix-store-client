@@ -7,13 +7,13 @@ export type UserDocument = HydratedDocument<User>;
 
 @Schema({ timestamps: true })
 export class User {
-  @Prop({ required: true, trim: true })
+  @Prop({ trim: true })
   name: string;
 
   @Prop({ required: true, unique: true, lowercase: true, trim: true })
   email: string;
 
-  @Prop()
+  @Prop({ required: true })
   password: string;
 
   @Prop()
@@ -34,7 +34,9 @@ export class User {
   @Prop()
   isActive: boolean;
 
-  // Dùng cho verify email hoặc reset password
+  @Prop({})
+  provider: string;
+
   @Prop()
   codeId: string;
 
